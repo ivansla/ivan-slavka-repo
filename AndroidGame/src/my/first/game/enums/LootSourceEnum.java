@@ -1,0 +1,16 @@
+package my.first.game.enums;
+
+public enum LootSourceEnum {
+
+	SMALL_CHEST,
+	CHEST,
+	LARGE_CHEST,
+	BARREL,
+	SARCOPHAGUS,
+	DECAPITATED_BODY,
+	WEAPON_RACK,
+	ARMOR_RACK,
+	BOOKCASE,
+	MONSTER,
+	UNIQUE_MONSTER
+}

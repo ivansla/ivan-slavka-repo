@@ -1,0 +1,40 @@
+package my.first.game.enums;
+
+public enum ArmorTypeEnum {
+
+	RAGS(1),
+	CAPE(2),
+	CLOAK(3),
+	ROBE(4),
+	QUILTED_ARMOR(5),
+	LEATHER_ARMOR(6),
+	HARD_LEATHER_ARMOR(7),
+	STUDDED_LEATHER_ARMOR(8),
+	RING_MAIL(9),
+	CHAIN_MAIL(10),
+	SCALE_MAIL(11),
+	SPLINT_MAIL(12),
+	BREAST_PLATE(13),
+	PLATE_MAIL(14),
+	FIELD_PLATE(15),
+	GOTHIC_PLATE(16),
+	FULL_PLATE_MAIL(17),
+	CAP(18),
+	SKULL_CAP(19),
+	HELM(20),
+	FULL_HELM(21),
+	CROWN(22),
+	GREAT_HELM(23),
+	BUCKLER(24),
+	SMALL_SHIELD(25),
+	LARGE_SHIELD(26),
+	KITE_SHIELD(27),
+	GOTHIC_SHIELD(28),
+	TOWER_SHIELD(29);
+
+	private int value;
+
+	private ArmorTypeEnum(int value){
+		this.value = value;
+	}
+}

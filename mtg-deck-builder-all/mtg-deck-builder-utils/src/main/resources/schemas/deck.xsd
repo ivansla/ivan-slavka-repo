@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="deck" type="deck"/>
+    <xs:complexType name="deck">
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="card"/>
+      </xs:sequence>
+      <xs:attribute name="code" use="required"/>
+      <xs:attribute name="name" use="required"/>
+    </xs:complexType>
+    
+    <xs:element name="card" type="card"/>
+    <xs:complexType name="card">
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element ref="cost"/>
+        <xs:element ref="loyalty"/>
+        <xs:element ref="typelist"/>
+        <xs:element ref="pow"/>
+        <xs:element ref="tgh"/>
+        <xs:element ref="hand"/>
+        <xs:element ref="life"/>
+        <xs:element ref="rulelist"/>
+        <xs:element ref="multi"/>
+      </xs:sequence>
+    </xs:complexType>
+    
+    <xs:element name="multi" type="multi"/>
+    <xs:complexType name="multi">
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element ref="cost"/>
+        <xs:element ref="loyalty"/>
+        <xs:element ref="typelist"/>
+        <xs:element ref="pow"/>
+        <xs:element ref="tgh"/>
+        <xs:element ref="hand"/>
+        <xs:element ref="life"/>
+        <xs:element ref="rulelist"/>
+      </xs:sequence>
+      <xs:attribute name="type" use="required"/>
+    </xs:complexType>
+  
+  <xs:element name="name" type="xs:string"/>
+  <xs:element name="cost" type="xs:string"/>
+  <xs:element name="loyalty" type="xs:string"/>
+  
+  <xs:element name="typelist" type="typelist"/>
+    <xs:complexType name="typelist">
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="type"/>
+      </xs:sequence>
+    </xs:complexType>
+  
+  <xs:element name="type" type="xs:string"/>
+  <xs:element name="pow" type="xs:string"/>
+  <xs:element name="tgh" type="xs:string"/>
+  <xs:element name="hand" type="xs:string"/>
+  <xs:element name="life" type="xs:string"/>
+  <xs:element name="rulelist" type="rulelist"/>
+    <xs:complexType name="rulelist">
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="rule"/>     
+      </xs:sequence>
+    </xs:complexType>
+  
+  <xs:element name="rule"/>
+    <xs:complexType name="rule" mixed="true">
+      <xs:attribute name="reminder" use="required"/>
+    </xs:complexType>
+  
+</xs:schema>

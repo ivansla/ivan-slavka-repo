@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:orientation="horizontal" >
+
+	<Button
+        android:id="@+id/button_other_location_connection_0"
+        android:tag="button_other_location_connection_0"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:onClick="goToOtherLocation"/>
+	
+	<Button
+        android:id="@+id/button_other_location_connection_1"
+        android:tag="button_other_location_connection_1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:onClick="goToOtherLocation"/>
+	
+	<Button
+        android:id="@+id/button_other_location_connection_2"
+        android:tag="button_other_location_connection_2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:onClick="goToOtherLocation"/>
+	
+	<Button
+        android:id="@+id/button_other_location_connection_3"
+        android:tag="button_other_location_connection_3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:onClick="goToOtherLocation"/>
+    
+</LinearLayout>

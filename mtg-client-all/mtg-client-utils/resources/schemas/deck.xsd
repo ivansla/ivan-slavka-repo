@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:import namespace='mtg:card' schemaLocation="card.xsd"/>
+
+  <xs:element name="deck">
+  <xs:complexType>
+    <xs:sequence xmlns:card='mtg:card'>
+      <xs:element ref='card:card' maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="code" type="xs:anySimpleType" use="required"/>
+    <xs:attribute name="name" type="xs:anySimpleType" use="required"/>
+  </xs:complexType>
+  </xs:element>
+</xs:schema>
+

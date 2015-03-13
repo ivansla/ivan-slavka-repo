@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/inventory_filter_button_0"
+            android:tag="inventory_filter_button_0"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="toggleFilter" />
+        
+        <Button
+            android:id="@+id/inventory_filter_button_1"
+            android:tag="inventory_filter_button_1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="toggleFilter" />
+                
+        <Button
+            android:id="@+id/inventory_filter_button_2"
+            android:tag="inventory_filter_button_2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="toggleFilter" />
+                        
+        <Button
+            android:id="@+id/inventory_filter_button_3"
+            android:tag="inventory_filter_button_3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="toggleFilter" />
+                                
+        <Button
+            android:id="@+id/inventory_filter_button_4"
+            android:tag="inventory_filter_button_4"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="toggleFilter" />
+
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/inventory_filter_button_5"
+            android:tag="inventory_filter_button_5"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="toggleFilter" />
+        
+        <Button
+            android:id="@+id/inventory_filter_button_6"
+            android:tag="inventory_filter_button_6"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="toggleFilter" />
+        
+        <Button
+            android:id="@+id/inventory_filter_button_7"
+            android:tag="inventory_filter_button_7"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="toggleFilter" />
+        
+        <Button
+            android:id="@+id/inventory_filter_button_8"
+            android:tag="inventory_filter_button_8"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="toggleFilter" />
+
+    </LinearLayout>
+
+</LinearLayout>

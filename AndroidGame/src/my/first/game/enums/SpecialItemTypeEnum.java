@@ -1,0 +1,11 @@
+package my.first.game.enums;
+
+public enum SpecialItemTypeEnum {
+
+	HEALTH_POTION,
+	MANA_POTION,
+	FULL_HEALTH_POTION,
+	FULL_MANA_POTION,
+	REJUVENATION_POTION,
+	FULL_REJUVENATION
+}

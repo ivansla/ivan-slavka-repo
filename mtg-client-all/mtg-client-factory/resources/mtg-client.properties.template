@@ -1,0 +1,10 @@
+image.path=../mtg-client-utils/src/test/java/resources/pictures/
+deck.path=../mtg-client-utils/resources/decks/
+
+#Schemas location
+LOGIN=../mtg-client-utils/resources/schemas/login.xsd
+INVITATION=../mtg-client-utils/resources/schemas/invitation.xsd
+ROSTER=../mtg-client-utils/resources/schemas/roster.xsd
+
+client.host=localhost
+client.port=5555

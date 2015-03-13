@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<xs:schema
+    xmlns:jxb='http://java.sun.com/xml/ns/jaxb'
+    jxb:version='2.0'
+    xmlns:xs='http://www.w3.org/2001/XMLSchema'
+    targetNamespace='http://etherx.jabber.org/streams'
+    xmlns='http://etherx.jabber.org/streams'
+    elementFormDefault='unqualified'>
+
+  <!-- Added import to the xml.xsd schema, because this schema has some references to it -->                
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+  <!-- Added location where the refering schemas are -->
+  <xs:import namespace='jabber:client' schemaLocation="./jabber-client.xsd"/>
+  <xs:import namespace='jabber:server' schemaLocation="./jabber-server.xsd"/>
+  <xs:import namespace='urn:ietf:params:xml:ns:xmpp-sasl' schemaLocation="./sasl.xsd"/>
+  <xs:import namespace='urn:ietf:params:xml:ns:xmpp-streams' schemaLocation="./streamerror.xsd"/>
+  <xs:import namespace='urn:ietf:params:xml:ns:xmpp-tls' schemaLocation="./tls.xsd"/>
+
+  <xs:element name='stream'>
+    <xs:complexType>
+      <xs:sequence xmlns:client='jabber:client'
+                   xmlns:server='jabber:server'>
+        <xs:element ref='features' 
+                    minOccurs='0' 
+                    maxOccurs='1'/>         
+
+        <xs:any id='anyTls'
+                namespace='urn:ietf:params:xml:ns:xmpp-tls'
+                minOccurs='0'
+                maxOccurs='1'/>
+                  
+        <xs:any id='anySasl'
+                namespace='urn:ietf:params:xml:ns:xmpp-sasl'
+                minOccurs='0'
+                maxOccurs='1'/>
+                
+        <!-- This part is commented out, because it throws "Unique Particle Attribution" error. 
+        If another element needs to be added here that belongs to different namespace, 
+        then we need to define to which namespace another element belongs to. 
+        We cannot allow just ##other. -->                
+        <!--xs:any namespace='##other'
+                minOccurs='0'
+                maxOccurs='unbounded'
+                processContents='lax'/-->
+                
+        <xs:choice minOccurs='0' maxOccurs='1'>    
+          <xs:choice id='clientChoice' minOccurs='0' maxOccurs='unbounded'>
+            <xs:element ref='client:message'/>
+            <xs:element ref='client:presence'/>
+            <xs:element ref='client:iq'/>
+          </xs:choice> 
+          <xs:choice id='serverChoice' minOccurs='0' maxOccurs='unbounded'>
+            <xs:element ref='server:message'/>
+            <xs:element ref='server:presence'/>
+            <xs:element ref='server:iq'/> 
+          </xs:choice>
+        </xs:choice>
+        <xs:element ref='error' minOccurs='0' maxOccurs='1'/>
+      </xs:sequence>
+      <xs:attribute name='from' type='xs:string' use='optional'/>
+      <xs:attribute name='id' type='xs:string' use='optional'/>
+      <xs:attribute name='to' type='xs:string' use='optional'/>
+      <xs:attribute name='version' type='xs:decimal' use='optional'/>
+      <xs:attribute ref='xml:lang' use='optional'/>
+      <xs:anyAttribute namespace='##other' processContents='lax'/> 
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name='features'>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:any namespace='##other'
+                minOccurs='0'
+                maxOccurs='unbounded'
+                processContents='lax'/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name='error'>
+    <xs:complexType>
+      <xs:sequence  xmlns:err='urn:ietf:params:xml:ns:xmpp-streams'>
+        <xs:group   ref='err:streamErrorGroup'/>
+        <xs:element ref='err:text'
+                    minOccurs='0'
+                    maxOccurs='1'/>
+                    
+        <!-- This part is commented out, because it throws "Unique Particle Attribution" error. 
+        If another element needs to be added here that belongs to different namespace, 
+        then we need to define to which namespace another element belongs to. 
+        We cannot allow just ##other. -->
+        <!-- xs:any     namespace='##other'
+                    minOccurs='0'
+                    maxOccurs='1'
+                    processContents='lax'/ -->
+                    
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+</xs:schema>

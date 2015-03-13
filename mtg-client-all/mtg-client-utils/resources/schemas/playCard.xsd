@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:import namespace='mtg:card' schemaLocation="card.xsd"/>
+
+  <xs:element name="card">
+  <xs:complexType>
+    <xs:sequence xmlns:card='mtg:card'>
+      <xs:element ref="type"/>
+      <xs:element ref='card:card'/>
+    </xs:sequence>
+  </xs:complexType>
+  </xs:element>
+
+  <xs:element name="type">
+  <xs:simpleType>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="REQUEST"/>
+      <xs:enumeration value="RESPONSE"/>
+    </xs:restriction>
+  </xs:simpleType>
+  </xs:element>
+  
+</xs:schema>
+

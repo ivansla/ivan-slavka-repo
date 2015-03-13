@@ -1,0 +1,69 @@
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema"
+               jaxb:version="2.0">
+  
+  <!-- Binding for streams.xsd -->             
+  <jaxb:bindings schemaLocation="./streams.xsd"  node="/xs:schema">
+    <jaxb:bindings schemaLocation="./streams.xsd"  node="/xs:schema">
+    	<jaxb:schemaBindings>
+     	 <jaxb:package name="ivan.slavka.jaxb.beans.streams"/>
+    	</jaxb:schemaBindings>
+  </jaxb:bindings>
+    <jaxb:bindings node="//xs:element[@name='stream']">
+      <jaxb:bindings node=".//xs:any[@id='anyTls']">
+        <jaxb:property name="TLSElement"/>
+      </jaxb:bindings>
+      <jaxb:bindings node=".//xs:any[@id='anySasl']">
+        <jaxb:property name="SASLElement"/>
+      </jaxb:bindings>
+      <jaxb:bindings node=".//xs:choice[@id='clientChoice']">
+        <jaxb:property name="clientChoice"/>
+      </jaxb:bindings>
+      <jaxb:bindings node=".//xs:choice[@id='serverChoice']">
+        <jaxb:property name="serverChoice"/>
+      </jaxb:bindings>
+    </jaxb:bindings>
+  </jaxb:bindings>
+	
+  <!-- Binding for jabber-server.xsd --> 	
+  <jaxb:bindings schemaLocation="./jabber-server.xsd"  node="/xs:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="ivan.slavka.jaxb.beans.server"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
+  
+  <!-- Binding for jabber-client.xsd --> 	
+  <jaxb:bindings schemaLocation="./jabber-client.xsd"  node="/xs:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="ivan.slavka.jaxb.beans.client"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
+  
+  <!-- Binding for sasl.xsd --> 	
+  <jaxb:bindings schemaLocation="./sasl.xsd"  node="/xs:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="ivan.slavka.jaxb.beans.sasl"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>     
+  
+  <!-- Binding for stanzaerror.xsd --> 	
+  <jaxb:bindings schemaLocation="./stanzaerror.xsd"  node="/xs:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="ivan.slavka.jaxb.beans.stanzaerror"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>
+  
+  <!-- Binding for streamerror.xsd --> 	
+  <jaxb:bindings schemaLocation="./streamerror.xsd"  node="/xs:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="ivan.slavka.jaxb.beans.streamerror"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings> 
+  
+  <!-- Binding for tls.xsd --> 	
+  <jaxb:bindings schemaLocation="./tls.xsd"  node="/xs:schema">
+    <jaxb:schemaBindings>
+      <jaxb:package name="ivan.slavka.jaxb.beans.tls"/>
+    </jaxb:schemaBindings>
+  </jaxb:bindings>          
+</jaxb:bindings>

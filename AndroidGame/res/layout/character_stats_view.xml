@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+    
+    <!-- Strength -->
+    <TextView
+        android:id="@+id/strength_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+    	android:text="@string/strength_label" />
+    <TextView
+        android:id="@+id/strength_value"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/strength_label"
+        android:layout_height="wrap_content"/>
+    <!-- Dexterity -->
+    <TextView
+        android:id="@+id/dexterity_label"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/strength_label"
+        android:layout_height="wrap_content"
+    	android:text="@string/dexterity_label" />
+    <TextView
+        android:id="@+id/dexterity_value"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/dexterity_label"
+        android:layout_below="@id/strength_label"
+        android:layout_height="wrap_content"/>
+    <!-- Vitality -->
+    <TextView
+        android:id="@+id/vitality_label"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/dexterity_label"
+        android:layout_height="wrap_content"
+    	android:text="@string/vitality_label" />
+    <TextView
+        android:id="@+id/vitality_value"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/vitality_label"
+        android:layout_below="@id/dexterity_label"
+        android:layout_height="wrap_content"/>
+    <!-- Magic -->
+    <TextView
+        android:id="@+id/magic_label"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/vitality_label"
+        android:layout_height="wrap_content"
+    	android:text="@string/magic_label" />
+    <TextView
+        android:id="@+id/magic_value"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/magic_label"
+        android:layout_below="@id/vitality_label"
+        android:layout_height="wrap_content"/>
+     <!-- Damage -->
+    <TextView
+        android:id="@+id/damage_label"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/strength_value"
+        android:layout_height="wrap_content"
+    	android:text="@string/damage_label" />
+    <TextView
+        android:id="@+id/min_damage_value"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/damage_label"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/damage_delimeter"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/min_damage_value"
+        android:text="@string/interval_delimiter"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/max_damage_value"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/damage_delimeter"
+        android:layout_height="wrap_content"/>
+     <!-- Armor -->
+    <TextView
+        android:id="@+id/armor_label"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/damage_label"
+        android:layout_toRightOf="@id/strength_value"
+        android:layout_height="wrap_content"
+    	android:text="@string/armor_label" />
+    <TextView
+        android:id="@+id/armor_value"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/armor_label"
+        android:layout_below="@id/damage_label"
+        android:layout_height="wrap_content"/>
+    <!-- Health -->
+    <TextView
+        android:id="@+id/health_label"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/strength_value"
+        android:layout_below="@id/armor_label"
+        android:layout_height="wrap_content"
+    	android:text="@string/health_label" />
+    <TextView
+        android:id="@+id/health_value"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/health_label"
+        android:layout_below="@id/armor_label"
+        android:layout_height="wrap_content"/>
+    <!-- Mana -->
+    <TextView
+        android:id="@+id/mana_label"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/strength_value"
+        android:layout_below="@id/health_label"
+        android:layout_height="wrap_content"
+    	android:text="@string/mana_label" />
+    <TextView
+        android:id="@+id/mana_value"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/mana_label"
+        android:layout_below="@id/health_label"
+        android:layout_height="wrap_content"/>
+     <!-- Chance to hit -->
+    <TextView
+        android:id="@+id/chance_to_hit_label"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/strength_value"
+        android:layout_below="@id/mana_label"
+        android:layout_height="wrap_content"
+    	android:text="@string/chance_to_hit_label" />
+    <TextView
+        android:id="@+id/chance_to_hit_value"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/chance_to_hit_label"
+        android:layout_below="@id/mana_label"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

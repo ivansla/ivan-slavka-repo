@@ -1,0 +1,3 @@
+LOGIN=./resources/schemas/login.xsd
+INVITATION=./resources/schemas/invitation.xsd
+ROSTER=./resources/schemas/roster.xsd
