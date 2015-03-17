@@ -55,12 +55,12 @@ public class GameView extends AbstractGameView {
 
 		LOWEST_POINT = this.displaySize.y * 0.8f;
 		SPRITE_PADDING = this.displaySize.y * 0.02f;
-		MAX_NUMBER_OF_SPRITES =(int) (LOWEST_POINT / (Sprite.SIZE + SPRITE_PADDING));
+		MAX_NUMBER_OF_SPRITES =(int) (LOWEST_POINT / (Sprite.HEIGHT_SIZE + SPRITE_PADDING));
 
 		this.economySprite = new EconomyStatusSprite(this.economyProgressController);
 		this.wonderSprite = new WonderConstructionSprite(this.economyProgressController);
 
-		this.spriteManager = new SpriteManager(this, null, this.economyProgressController);
+		this.spriteManager = new SpriteManager(this, this.economyProgressController);
 		this.economySprite.prepareSprite(this, null);
 		this.wonderSprite.prepareSprite(this, null);
 		this.startGame();
@@ -82,7 +82,7 @@ public class GameView extends AbstractGameView {
 		long timePassed = System.currentTimeMillis() - this.spriteStartTime;
 		if(timePassed > SPRITE_DELAY && this.numberOfActiveSprites < MAX_NUMBER_OF_SPRITES){// && this.activeSpriteIndex < 0){
 			Sprite sprite = this.spriteManager.retrieveSprite();
-			float lowerTo = LOWEST_POINT - ((this.numberOfActiveSprites) * (Sprite.SIZE + SPRITE_PADDING));
+			float lowerTo = LOWEST_POINT - ((this.numberOfActiveSprites) * (Sprite.HEIGHT_SIZE + SPRITE_PADDING));
 			sprite.setSpriteYDestination(lowerTo);
 			this.spriteStartTime = System.currentTimeMillis();
 
@@ -151,7 +151,7 @@ public class GameView extends AbstractGameView {
 		for(int i = 0; i < NUMBER_OF_SPRITES; i++){
 			s = this.activeSpriteArray[i];
 			if(s != null){
-				float lowerTo = LOWEST_POINT - (spriteIndex * (Sprite.SIZE + SPRITE_PADDING));
+				float lowerTo = LOWEST_POINT - (spriteIndex * (Sprite.HEIGHT_SIZE + SPRITE_PADDING));
 				s.setSpriteYDestination(lowerTo);
 				spriteIndex++;
 			}

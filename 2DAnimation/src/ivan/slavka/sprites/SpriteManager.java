@@ -1,6 +1,7 @@
 package ivan.slavka.sprites;
 
 import ivan.slavka.GameView;
+import ivan.slavka.R;
 import ivan.slavka.generators.EventGenerator;
 import ivan.slavka.interfaces.IEconomyProgress;
 import ivan.slavka.interfaces.IEventGenerator;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 public class SpriteManager {
 
@@ -26,10 +28,11 @@ public class SpriteManager {
 		this.gameView = gameView;
 	}
 
-	public SpriteManager(GameView gameView, Bitmap bmp, IEconomyProgress economyController){
-		this.bmp = bmp;
+	public SpriteManager(GameView gameView, IEconomyProgress economyController){
 		this.gameView = gameView;
 		this.economyController = economyController;
+
+		this.bmp = BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.pickaxe);
 	}
 
 	public Sprite retrieveSprite(){

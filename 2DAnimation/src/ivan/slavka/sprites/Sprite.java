@@ -20,7 +20,8 @@ public class Sprite {
 
 	private static float SWIPE_ANIMATION_TIME = 0.5f * GameView.FPS;
 	private static float FALL_ANIMATION_TIME = 2f * GameView.FPS;
-	public final static int SIZE = 50;
+	public final static int WIDTH_SIZE = 128;
+	public final static int HEIGHT_SIZE = 64;
 	private static double GRAVITY = 0.981f;
 	private static int TOLERANCE = 50;
 
@@ -77,7 +78,7 @@ public class Sprite {
 		//this.height = bmp.getHeight() / BMP_ROWS;
 
 		this.drawPaint = new Paint();
-		this.drawPaint.setColor(Color.RED);
+		this.drawPaint.setColor(Color.WHITE);
 
 		this.drawPaint.setAntiAlias(true);
 		//this.drawPaint.setStrokeWidth(20);
@@ -92,10 +93,11 @@ public class Sprite {
 	public void prepareSprite(GameView gameView, Bitmap bmp){
 		if(this.gameView == null){
 
+			this.bmp = bmp;
 			this.gameView = gameView;
 			this.drawingRect = new Rect();
 			gameView.getWindowVisibleDisplayFrame(this.drawingRect);
-			this.position = new PointF((this.drawingRect.exactCenterX() - (SIZE * 0.5f)), 0f);
+			this.position = new PointF((this.drawingRect.exactCenterX() - (WIDTH_SIZE * 0.5f)), 0f);
 		}
 	}
 
@@ -157,8 +159,9 @@ public class Sprite {
 
 	public void onDraw(Canvas canvas) {
 		this.update();
-		canvas.drawRect(this.position.x, this.position.y, this.position.x + SIZE, this.position.y + SIZE, this.drawPaint);
-
+		canvas.drawRect(this.position.x, this.position.y, this.position.x + WIDTH_SIZE, this.position.y + HEIGHT_SIZE, this.drawPaint);
+		canvas.drawBitmap(this.bmp, this.position.x, this.position.y, null);
+		/*
 		if(this.event.isSpecialEvent()){
 			canvas.drawText("" + this.event.getPrimaryEffect().getSpecialEventName(), this.position.x + 2, this.position.y + 10, this.textPaint);
 			canvas.drawText("" + this.event.getPrimaryEffect().getEventResources()[0].getQuantity(), this.position.x + 2, this.position.y + 20, this.textPaint);
@@ -169,10 +172,11 @@ public class Sprite {
 			canvas.drawText("" + this.event.getSecondaryEffect().getEventResources()[0].getResource().getAbbr(), this.position.x + 2 + 28, this.position.y + 10, this.textPaint);
 			canvas.drawText("" + this.event.getSecondaryEffect().getEventResources()[0].getQuantity(), this.position.x + 2 + 28, this.position.y + 20, this.textPaint);
 		}
+		 */
 	}
 
 	public boolean isCollition(double x2, double y2) {
-		boolean isCollition = x2 > this.position.x && x2 < this.position.x + SIZE && y2 > this.position.y && y2 < this.position .y + SIZE;
+		boolean isCollition = x2 > this.position.x && x2 < this.position.x + WIDTH_SIZE && y2 > this.position.y && y2 < this.position .y + HEIGHT_SIZE;
 		return isCollition;
 	}
 
