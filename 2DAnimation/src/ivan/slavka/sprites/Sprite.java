@@ -1,9 +1,11 @@
 package ivan.slavka.sprites;
 
 import ivan.slavka.GameView;
+import ivan.slavka.enums.EventSpriteEnum;
 import ivan.slavka.enums.InputControlEnum;
 import ivan.slavka.interfaces.IEvent;
 
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -21,7 +23,7 @@ public class Sprite {
 	private static float SWIPE_ANIMATION_TIME = 0.5f * GameView.FPS;
 	private static float FALL_ANIMATION_TIME = 2f * GameView.FPS;
 	public final static int WIDTH_SIZE = 128;
-	public final static int HEIGHT_SIZE = 64;
+	public final static int HEIGHT_SIZE = 128;
 	private static double GRAVITY = 0.981f;
 	private static int TOLERANCE = 50;
 
@@ -31,6 +33,7 @@ public class Sprite {
 
 
 	//private float distanceY;
+	private Bitmap[] bitmaps;
 	private PointF position;// = new PointF(200f, 100f);
 	private float deltaX;
 	private boolean isClicked = false;
@@ -66,6 +69,8 @@ public class Sprite {
 
 	public Sprite() {
 
+		this.bitmaps = new Bitmap[2];
+
 		this.alpha = 255;
 		this.isReleased = false;
 		//this.spriteDestinationX = this.position.x;
@@ -90,15 +95,19 @@ public class Sprite {
 		this.textPaint.setStyle(Paint.Style.FILL);
 	}
 
-	public void prepareSprite(GameView gameView, Bitmap bmp){
+	public void prepareSprite(GameView gameView){
 		if(this.gameView == null){
 
-			this.bmp = bmp;
 			this.gameView = gameView;
 			this.drawingRect = new Rect();
 			gameView.getWindowVisibleDisplayFrame(this.drawingRect);
 			this.position = new PointF((this.drawingRect.exactCenterX() - (WIDTH_SIZE * 0.5f)), 0f);
 		}
+	}
+
+	public void prepareSpriteBitmaps(Map<EventSpriteEnum, Bitmap> eventSpriteBitmapMap){
+		this.bitmaps[0] = eventSpriteBitmapMap.get(this.getEvent().getPrimaryEffect().getEventName());
+		this.bitmaps[1] = eventSpriteBitmapMap.get(this.getEvent().getSecondaryEffect().getEventName());
 	}
 
 	private void update() {
@@ -160,19 +169,12 @@ public class Sprite {
 	public void onDraw(Canvas canvas) {
 		this.update();
 		canvas.drawRect(this.position.x, this.position.y, this.position.x + WIDTH_SIZE, this.position.y + HEIGHT_SIZE, this.drawPaint);
-		canvas.drawBitmap(this.bmp, this.position.x, this.position.y, null);
-		/*
 		if(this.event.isSpecialEvent()){
-			canvas.drawText("" + this.event.getPrimaryEffect().getSpecialEventName(), this.position.x + 2, this.position.y + 10, this.textPaint);
-			canvas.drawText("" + this.event.getPrimaryEffect().getEventResources()[0].getQuantity(), this.position.x + 2, this.position.y + 20, this.textPaint);
+			canvas.drawBitmap(this.bitmaps[0], this.position.x, this.position.y, null);
 		} else {
-			canvas.drawText("" + this.event.getPrimaryEffect().getEventResources()[0].getResource().getAbbr(), this.position.x + 2, this.position.y + 10, this.textPaint);
-			canvas.drawText("" + this.event.getPrimaryEffect().getEventResources()[0].getQuantity(), this.position.x + 2, this.position.y + 20, this.textPaint);
-
-			canvas.drawText("" + this.event.getSecondaryEffect().getEventResources()[0].getResource().getAbbr(), this.position.x + 2 + 28, this.position.y + 10, this.textPaint);
-			canvas.drawText("" + this.event.getSecondaryEffect().getEventResources()[0].getQuantity(), this.position.x + 2 + 28, this.position.y + 20, this.textPaint);
+			canvas.drawBitmap(this.bitmaps[0], this.position.x, this.position.y, null);
+			canvas.drawBitmap(this.bitmaps[1], (this.position.x + (WIDTH_SIZE * 0.5f)), this.position.y, null);
 		}
-		 */
 	}
 
 	public boolean isCollition(double x2, double y2) {

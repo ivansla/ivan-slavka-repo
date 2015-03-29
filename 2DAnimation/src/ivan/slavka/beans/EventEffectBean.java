@@ -1,8 +1,8 @@
 package ivan.slavka.beans;
 
 import ivan.slavka.enums.EventBehaviorEnum;
+import ivan.slavka.enums.EventSpriteEnum;
 import ivan.slavka.enums.EventTypeEnum;
-import ivan.slavka.enums.ResourcesEnum;
 import ivan.slavka.enums.SpecialEventEnum;
 
 import java.util.Random;
@@ -25,19 +25,19 @@ public class EventEffectBean {
 	};
 
 	private AttributeBean[] specialEventAttributes = {
-			new AttributeBean(SpecialEventEnum.VERMIN, 20, 80, 1, ResourcesEnum.FOOD),
-			new AttributeBean(SpecialEventEnum.PLAGUE, 20, 80, 5, ResourcesEnum.ALL_WORKERS),
-			new AttributeBean(SpecialEventEnum.EARTHQUAKE, 10, 30, 5, ResourcesEnum.CONSTRUCTION),
-			new AttributeBean(SpecialEventEnum.BAD_ROCK, 20, 80, 5, ResourcesEnum.STONE),
-			new AttributeBean(SpecialEventEnum.FIRE, 20, 80, 5, ResourcesEnum.WOOD),
-			new AttributeBean(SpecialEventEnum.BABY_BOOM, 20, 50, 5, ResourcesEnum.ALL_WORKERS),
+			new AttributeBean(EventSpriteEnum.VERMIN, 20, 80, 1, EventSpriteEnum.FOOD),
+			new AttributeBean(EventSpriteEnum.PLAGUE, 20, 80, 5, EventSpriteEnum.ALL_WORKERS),
+			new AttributeBean(EventSpriteEnum.EARTHQUAKE, 10, 30, 5, EventSpriteEnum.CONSTRUCTION),
+			new AttributeBean(EventSpriteEnum.BAD_ROCK, 20, 80, 5, EventSpriteEnum.STONE),
+			new AttributeBean(EventSpriteEnum.FIRE, 20, 80, 5, EventSpriteEnum.WOOD),
+			new AttributeBean(EventSpriteEnum.BABY_BOOM, 20, 50, 5, EventSpriteEnum.ALL_WORKERS),
 	};
 
 	private AttributeBean[] raidEventAttributes = {
-			new AttributeBean(SpecialEventEnum.RAID_VILLAGE, 100, 300, 2, ResourcesEnum.FOOD),
-			new AttributeBean(SpecialEventEnum.RAID_VILLAGE, 100, 300, 2, ResourcesEnum.WOOD),
-			new AttributeBean(SpecialEventEnum.RAID_TOWN, 50, 150, 2, ResourcesEnum.STONE),
-			new AttributeBean(SpecialEventEnum.RAID_TOWN, 20, 50, 2, ResourcesEnum.COINS)
+			new AttributeBean(EventSpriteEnum.RAID_VILLAGE, 100, 300, 2, EventSpriteEnum.FOOD),
+			new AttributeBean(EventSpriteEnum.RAID_VILLAGE, 100, 300, 2, EventSpriteEnum.WOOD),
+			new AttributeBean(EventSpriteEnum.RAID_TOWN, 50, 150, 2, EventSpriteEnum.STONE),
+			new AttributeBean(EventSpriteEnum.RAID_TOWN, 20, 50, 2, EventSpriteEnum.COINS)
 	};
 
 	private AttributeBean[] invasionAttributes = {
@@ -53,6 +53,7 @@ public class EventEffectBean {
 	private EventBehaviorEnum behavior;
 	private SpecialEventEnum specialEventName;
 	private EventTypeEnum eventType;
+	private EventSpriteEnum eventName;
 
 	private int lastPossibleAttributeIndex = 0;
 
@@ -94,7 +95,8 @@ public class EventEffectBean {
 				this.behavior = EventBehaviorEnum.SELL;
 			}
 			resourceRoll = this.random.nextInt(3);
-			this.resourceArray[0].activateResource(ResourcesEnum.getEnum(resourceRoll), quantity);
+			this.resourceArray[0].activateResource(EventSpriteEnum.getEnum(resourceRoll), quantity);
+			this.eventName = EventSpriteEnum.getEnum(resourceRoll);
 			break;
 		case WORKER:
 			filterSuccessfull = this.filterPossibleAttributes(level);
@@ -103,8 +105,9 @@ public class EventEffectBean {
 				quantity = this.random.nextInt(attr.maxValue - attr.minValue + 1) + attr.minValue;
 				this.behavior = EventBehaviorEnum.ADDITION;
 				resourceRoll = this.random.nextInt(5) + 4;
-				this.resourceArray[0].activateResource(ResourcesEnum.getEnum(resourceRoll), quantity);
+				this.resourceArray[0].activateResource(EventSpriteEnum.getEnum(resourceRoll), quantity);
 				isRollSuccessfull = true;
+				this.eventName = EventSpriteEnum.getEnum(resourceRoll);
 			}
 			break;
 		case SPECIAL_EVENT:
@@ -115,6 +118,7 @@ public class EventEffectBean {
 				this.behavior = EventBehaviorEnum.SUBTRACTION;
 				this.resourceArray[0].activateResource(attr.resource, quantity);
 				isRollSuccessfull = true;
+				this.eventName = attr.name;
 			}
 			break;
 		case RAID:
@@ -129,6 +133,7 @@ public class EventEffectBean {
 				quantity = this.random.nextInt(attr.maxValue - attr.minValue + 1) + attr.minValue;
 				this.resourceArray[1].activateResource(attr.resource, quantity);
 				isRollSuccessfull = true;
+				this.eventName = attr.name;
 			}
 			break;
 		case ATTACK:
@@ -137,7 +142,7 @@ public class EventEffectBean {
 				attr = this.possibleAttributes[this.random.nextInt(this.lastPossibleAttributeIndex)];
 				quantity = this.random.nextInt(attr.maxValue - attr.minValue + 1) + attr.minValue;
 				this.behavior = EventBehaviorEnum.SUBTRACTION;
-				this.resourceArray[0].activateResource(ResourcesEnum.SOLDIER, quantity);
+				this.resourceArray[0].activateResource(EventSpriteEnum.SOLDIER, quantity);
 				isRollSuccessfull = true;
 			}
 			break;
@@ -190,20 +195,20 @@ public class EventEffectBean {
 	}
 
 	private class AttributeBean{
-		public final ResourcesEnum resource;
+		public final EventSpriteEnum resource;
 		public final int minValue;
 		public final int maxValue;
 		public final int qLvl;
-		public SpecialEventEnum name;
+		public EventSpriteEnum name;
 
 		public AttributeBean(int minValue, int maxValue, int qLvl){
 			this.minValue = minValue;
 			this.maxValue = maxValue;
 			this.qLvl = qLvl;
-			this.resource = ResourcesEnum.ALL_WORKERS;
+			this.resource = EventSpriteEnum.ALL_WORKERS;
 		}
 
-		public AttributeBean(SpecialEventEnum name, int minValue, int maxValue, int qLvl, ResourcesEnum resourceEnum){
+		public AttributeBean(EventSpriteEnum name, int minValue, int maxValue, int qLvl, EventSpriteEnum resourceEnum){
 			this.name = name;
 			this.minValue = minValue;
 			this.maxValue = maxValue;
@@ -228,5 +233,8 @@ public class EventEffectBean {
 
 	public EventTypeEnum getEventType(){
 		return this.eventType;
+	}
+	public EventSpriteEnum getEventName(){
+		return this.eventName;
 	}
 }
