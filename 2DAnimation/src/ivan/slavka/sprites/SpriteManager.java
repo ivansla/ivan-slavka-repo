@@ -3,6 +3,7 @@ package ivan.slavka.sprites;
 import ivan.slavka.GameView;
 import ivan.slavka.R;
 import ivan.slavka.enums.EventSpriteEnum;
+import ivan.slavka.enums.GeneralSpriteEnum;
 import ivan.slavka.generators.EventGenerator;
 import ivan.slavka.interfaces.IEconomyProgress;
 import ivan.slavka.interfaces.IEventGenerator;
@@ -22,6 +23,7 @@ public class SpriteManager {
 	private IEconomyProgress economyController;
 
 	private Map<EventSpriteEnum, Bitmap> eventSpriteBitmapMap = new HashMap<>();
+	private Map<GeneralSpriteEnum , Bitmap> generalSpriteBitmapMap = new HashMap<>();
 
 	private Bitmap bmp;
 	private GameView gameView;
@@ -83,5 +85,11 @@ public class SpriteManager {
 		this.eventSpriteBitmapMap.put(EventSpriteEnum.RAID_TOWN, BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.city));
 		this.eventSpriteBitmapMap.put(EventSpriteEnum.RAID_VILLAGE, BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.village));
 		this.eventSpriteBitmapMap.put(EventSpriteEnum.VERMIN, BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.vermin));
+
+		this.generalSpriteBitmapMap.put(GeneralSpriteEnum.WORLD, BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.world));
+	}
+
+	public Bitmap getGeneralSprite(GeneralSpriteEnum generalSpriteEnum){
+		return this.generalSpriteBitmapMap.get(generalSpriteEnum);
 	}
 }

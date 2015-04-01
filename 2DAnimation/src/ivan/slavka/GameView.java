@@ -2,6 +2,7 @@ package ivan.slavka;
 
 import ivan.slavka.abstracts.AbstractGameView;
 import ivan.slavka.controllers.EconomyController;
+import ivan.slavka.enums.GeneralSpriteEnum;
 import ivan.slavka.enums.InputControlEnum;
 import ivan.slavka.interfaces.IEconomyProgress;
 import ivan.slavka.interfaces.IEvent;
@@ -11,6 +12,7 @@ import ivan.slavka.sprites.SpriteManager;
 import ivan.slavka.sprites.WonderConstructionSprite;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -46,6 +48,7 @@ public class GameView extends AbstractGameView {
 	private Paint drawPaint;
 
 	private Sprite activeSprite = null;
+	private Bitmap worldBitmap = null;
 
 	public GameView(Context context) {
 		super(context);
@@ -71,6 +74,7 @@ public class GameView extends AbstractGameView {
 		this.drawPaint.setAntiAlias(true);
 		//this.drawPaint.setStrokeWidth(20);
 		this.drawPaint.setStyle(Paint.Style.FILL);
+		this.worldBitmap = this.spriteManager.getGeneralSprite(GeneralSpriteEnum.WORLD);
 	}
 
 	private void startGame(){
@@ -160,9 +164,9 @@ public class GameView extends AbstractGameView {
 
 	@Override
 	public void onDraw(Canvas canvas) {
-		canvas.drawColor(Color.BLACK);
-		this.economySprite.onDraw(canvas);
-		this.wonderSprite.onDraw(canvas);
+		canvas.drawBitmap(this.worldBitmap, 0f, 0f, null);
+		//this.economySprite.onDraw(canvas);
+		//this.wonderSprite.onDraw(canvas);
 		Sprite s;
 		for(int i = 0; i < NUMBER_OF_SPRITES; i++){
 			s = this.activeSpriteArray[i];
