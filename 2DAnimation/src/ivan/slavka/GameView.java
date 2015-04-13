@@ -6,6 +6,7 @@ import ivan.slavka.enums.GeneralSpriteEnum;
 import ivan.slavka.enums.InputControlEnum;
 import ivan.slavka.interfaces.IEconomyProgress;
 import ivan.slavka.interfaces.IEvent;
+import ivan.slavka.sprites.AnimationSprite;
 import ivan.slavka.sprites.EconomyStatusSprite;
 import ivan.slavka.sprites.Sprite;
 import ivan.slavka.sprites.SpriteManager;
@@ -42,6 +43,10 @@ public class GameView extends AbstractGameView {
 
 	private SpriteManager spriteManager;// = new SpriteManager();
 	private IEconomyProgress economyProgressController = new EconomyController();
+
+
+	private AnimationSprite[] generalSprites = new AnimationSprite[10];
+
 	private EconomyStatusSprite economySprite;// = new EconomyStatusSprite();
 	private WonderConstructionSprite wonderSprite;
 
@@ -64,6 +69,7 @@ public class GameView extends AbstractGameView {
 		this.wonderSprite = new WonderConstructionSprite(this.economyProgressController);
 
 		this.spriteManager = new SpriteManager(this, this.economyProgressController);
+
 		this.economySprite.prepareSprite(this, null);
 		this.wonderSprite.prepareSprite(this, null);
 		this.startGame();
@@ -74,6 +80,40 @@ public class GameView extends AbstractGameView {
 		this.drawPaint.setAntiAlias(true);
 		//this.drawPaint.setStrokeWidth(20);
 		this.drawPaint.setStyle(Paint.Style.FILL);
+
+		this.prepareGeneralSprites();
+	}
+
+	private void prepareGeneralSprites(){
+
+		this.generalSprites[0] = new AnimationSprite(this.economyProgressController);
+		this.generalSprites[0].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.BUILDER_CAMP));
+		this.generalSprites[0].setCoordinates(350, 350);
+
+		this.generalSprites[1] = new AnimationSprite(this.economyProgressController);
+		this.generalSprites[1].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.GRANARY));
+		this.generalSprites[1].setCoordinates(100, 200);
+
+		this.generalSprites[2] = new AnimationSprite(this.economyProgressController);
+		this.generalSprites[2].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.LUMBER_CAMP));
+		this.generalSprites[2].setCoordinates(30, 500);
+
+		this.generalSprites[3] = new AnimationSprite(this.economyProgressController);
+		this.generalSprites[3].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.SOLDIER_CAMP));
+		this.generalSprites[3].setCoordinates(20, 300);
+
+		this.generalSprites[4] = new AnimationSprite(this.economyProgressController);
+		this.generalSprites[4].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.STONE_WAREHOUSE));
+		this.generalSprites[4].setCoordinates(340, 450);
+
+		this.generalSprites[5] = new AnimationSprite(this.economyProgressController);
+		this.generalSprites[5].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.WOOD_WAREHOUSE));
+		this.generalSprites[5].setCoordinates(410, 450);
+
+		this.generalSprites[6] = new AnimationSprite(this.economyProgressController, 128);
+		this.generalSprites[6].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.WONDER));
+		this.generalSprites[6].setCoordinates(310, 100);
+
 		this.worldBitmap = this.spriteManager.getGeneralSprite(GeneralSpriteEnum.WORLD);
 	}
 
@@ -165,6 +205,12 @@ public class GameView extends AbstractGameView {
 	@Override
 	public void onDraw(Canvas canvas) {
 		canvas.drawBitmap(this.worldBitmap, 0f, 0f, null);
+		for(int i = 0; i < this.generalSprites.length; i++){
+			if(this.generalSprites[i] != null){
+				this.generalSprites[i].onDraw(canvas);
+			}
+		}
+
 		//this.economySprite.onDraw(canvas);
 		//this.wonderSprite.onDraw(canvas);
 		Sprite s;

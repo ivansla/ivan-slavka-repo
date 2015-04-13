@@ -69,7 +69,7 @@ public class Sprite {
 
 	public Sprite() {
 
-		this.bitmaps = new Bitmap[2];
+		this.bitmaps = new Bitmap[3];
 
 		this.alpha = 255;
 		this.isReleased = false;
@@ -95,13 +95,14 @@ public class Sprite {
 		this.textPaint.setStyle(Paint.Style.FILL);
 	}
 
-	public void prepareSprite(GameView gameView){
+	public void prepareSprite(GameView gameView, Bitmap barqueBitmap){
 		if(this.gameView == null){
 
 			this.gameView = gameView;
 			this.drawingRect = new Rect();
 			gameView.getWindowVisibleDisplayFrame(this.drawingRect);
 			this.position = new PointF((this.drawingRect.exactCenterX() - (WIDTH_SIZE * 0.5f)), 0f);
+			this.bitmaps[2] = barqueBitmap;
 		}
 	}
 
@@ -168,7 +169,8 @@ public class Sprite {
 
 	public void onDraw(Canvas canvas) {
 		this.update();
-		canvas.drawRect(this.position.x, this.position.y, this.position.x + WIDTH_SIZE, this.position.y + HEIGHT_SIZE, this.drawPaint);
+		//canvas.drawRect(this.position.x, this.position.y, this.position.x + WIDTH_SIZE, this.position.y + HEIGHT_SIZE, this.drawPaint);
+		canvas.drawBitmap(this.bitmaps[2], this.position.x, this.position.y, null);
 		if(this.event.isSpecialEvent()){
 			canvas.drawBitmap(this.bitmaps[0], this.position.x, this.position.y, null);
 		} else {
