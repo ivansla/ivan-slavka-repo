@@ -16,12 +16,12 @@ public class EconomyStatusBean {
 	private int turnsWithoutFood = 0;
 
 	private float coins = 0f;
-	private float foodStorage = 10;
+	private volatile float foodStorage = 10;
 	private float woodIncome;
-	private int woodWorkers = 1;
+	private int woodWorkers = 0;
 	private float stoneIncome;
-	private int stoneWorkers = 1;
-	private float foodIncome;
+	private int stoneWorkers = 0;
+	private volatile float foodIncome;
 	private int foodWorkers = 1;
 	private int soldiers = 0;
 	private int builders = 0;
@@ -171,7 +171,7 @@ public class EconomyStatusBean {
 				this.foodStorage += difference;
 				return difference;
 			} else {
-				this.foodStorage -= food;
+				this.foodStorage += food;
 			}
 		} else {
 			this.foodStorage += food;
@@ -201,12 +201,14 @@ public class EconomyStatusBean {
 		int numberOfPeople = this.foodWorkers + this.woodWorkers + this.stoneWorkers + this.builders + this.soldiers;
 		this.foodIncome = (FOOD_MULTIPLICATOR * this.foodWorkers) - (numberOfPeople * FOOD_CONSUMPTION);
 		this.foodStorage += this.foodIncome;
+		Log.v("EconomyStatusBean.consumeFood", "Food Income: " + this.foodIncome + " Food Storage:" + this.foodStorage);
+
 
 		if(this.foodStorage <= 0){
 			this.turnsWithoutFood++;
 			if(this.turnsWithoutFood >= FOOD_SHORTAGE_TOLERANCE){
 				int peoplePerished = (int) Math.floor(this.foodStorage / FOOD_CONSUMPTION) * -1;
-				Log.v("consumeFood", "peoplePerished: " + peoplePerished);
+				Log.v("EconomyStatusBean.consumeFood", "peoplePerished: " + peoplePerished);
 				while(peoplePerished > 0){
 					int choice = peoplePerished % NUMBER_OF_WORKER_TYPES;
 					switch(choice){
@@ -255,6 +257,7 @@ public class EconomyStatusBean {
 	private void calculateResourceIncome(){
 		this.woodIncome = WOOD_MULTIPLICATOR * this.woodWorkers;
 		this.stoneIncome = STONE_MULTIPLICATOR * this.stoneWorkers;
+		Log.v("EconomyStatusBean.calculateResourceIncome", "Wood Income: " + this.woodIncome + " Stone Income: " + this.stoneIncome);
 	}
 
 	public float getFoodStorage() {

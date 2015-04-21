@@ -87,32 +87,40 @@ public class GameView extends AbstractGameView {
 	private void prepareGeneralSprites(){
 
 		this.generalSprites[0] = new AnimationSprite(this.economyProgressController);
-		this.generalSprites[0].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.BUILDER_CAMP));
-		this.generalSprites[0].setCoordinates(350, 350);
+		this.generalSprites[0].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.BUILDER_CAMP), GeneralSpriteEnum.BUILDER_CAMP);
+		this.generalSprites[0].setCoordinates(350, 250);
 
 		this.generalSprites[1] = new AnimationSprite(this.economyProgressController);
-		this.generalSprites[1].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.GRANARY));
+		this.generalSprites[1].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.GRANARY), GeneralSpriteEnum.GRANARY);
 		this.generalSprites[1].setCoordinates(100, 200);
 
 		this.generalSprites[2] = new AnimationSprite(this.economyProgressController);
-		this.generalSprites[2].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.LUMBER_CAMP));
+		this.generalSprites[2].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.LUMBER_CAMP), GeneralSpriteEnum.LUMBER_CAMP);
 		this.generalSprites[2].setCoordinates(30, 500);
 
 		this.generalSprites[3] = new AnimationSprite(this.economyProgressController);
-		this.generalSprites[3].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.SOLDIER_CAMP));
+		this.generalSprites[3].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.SOLDIER_CAMP), GeneralSpriteEnum.SOLDIER_CAMP);
 		this.generalSprites[3].setCoordinates(20, 300);
 
 		this.generalSprites[4] = new AnimationSprite(this.economyProgressController);
-		this.generalSprites[4].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.STONE_WAREHOUSE));
+		this.generalSprites[4].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.STONE_WAREHOUSE), GeneralSpriteEnum.STONE_WAREHOUSE);
 		this.generalSprites[4].setCoordinates(340, 450);
 
 		this.generalSprites[5] = new AnimationSprite(this.economyProgressController);
-		this.generalSprites[5].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.WOOD_WAREHOUSE));
+		this.generalSprites[5].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.WOOD_WAREHOUSE), GeneralSpriteEnum.WOOD_WAREHOUSE);
 		this.generalSprites[5].setCoordinates(410, 450);
 
 		this.generalSprites[6] = new AnimationSprite(this.economyProgressController, 128);
-		this.generalSprites[6].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.WONDER));
+		this.generalSprites[6].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.WONDER), GeneralSpriteEnum.WONDER);
 		this.generalSprites[6].setCoordinates(310, 100);
+
+		this.generalSprites[7] = new AnimationSprite(this.economyProgressController, 64);
+		this.generalSprites[7].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.FARM_CAMP), GeneralSpriteEnum.FARM_CAMP);
+		this.generalSprites[7].setCoordinates(30, 190);
+
+		this.generalSprites[8] = new AnimationSprite(this.economyProgressController, 64);
+		this.generalSprites[8].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.QUARRY_CAMP), GeneralSpriteEnum.QUARRY_CAMP);
+		this.generalSprites[8].setCoordinates(350, 350);
 
 		this.worldBitmap = this.spriteManager.getGeneralSprite(GeneralSpriteEnum.WORLD);
 	}

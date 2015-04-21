@@ -17,6 +17,7 @@ public interface IEconomyProgress extends IWonderConstruction{
 	public float getCoins();
 	public void increaseNumberOfSoldiers(int numberOfSoldiers);
 	public int getLevel();
+	public int getTotalPopulation();
 
 	public void processEvent(IEvent event, InputControlEnum input);
 }

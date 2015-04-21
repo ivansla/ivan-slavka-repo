@@ -95,6 +95,8 @@ public class SpriteManager {
 		this.generalSpriteBitmapMap.put(GeneralSpriteEnum.WOOD_WAREHOUSE, BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.wood_warehouse_strip));
 		this.generalSpriteBitmapMap.put(GeneralSpriteEnum.BARQUE, BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.barque));
 		this.generalSpriteBitmapMap.put(GeneralSpriteEnum.WONDER, BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.wonder_strip));
+		this.generalSpriteBitmapMap.put(GeneralSpriteEnum.QUARRY_CAMP, BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.stone_camp_strip));
+		this.generalSpriteBitmapMap.put(GeneralSpriteEnum.FARM_CAMP, BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.farmer_camp_strip));
 	}
 
 	public Bitmap getGeneralSprite(GeneralSpriteEnum generalSpriteEnum){

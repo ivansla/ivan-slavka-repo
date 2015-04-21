@@ -14,6 +14,8 @@ import ivan.slavka.interfaces.IEvent;
 
 import java.util.Random;
 
+import android.util.Log;
+
 public class EconomyController implements IEconomyProgress{
 
 	private static int TOWN_LOSS_MAX = 70;
@@ -111,14 +113,19 @@ public class EconomyController implements IEconomyProgress{
 
 	@Override
 	public void processEvent(IEvent event, InputControlEnum input) {
+		Log.v("EconomyController.processEvent", "*********************************************************************");
+		Log.v("EconomyController.processEvent", "Possible events: " + event.getPrimaryEffect().getEventName() + ";" + event.getSecondaryEffect().getEventName());
+
 		switch(input){
 		case LEFT:
+			Log.v("EconomyController.processEvent", "Processing event: " + event.getPrimaryEffect().getEventName());
+			Log.v("EconomyController.processEvent", "Resource: " + event.getPrimaryEffect().getEventResources()[0].getResource() + " Quantity: " + event.getPrimaryEffect().getEventResources()[0].getQuantity());
 			this.applyEvent(event.getPrimaryEffect());
-			//Log.v("processEvent", "Resource: " + event.getPrimaryResource() + " Quantity: " + event.getPrimaryQuantity());
 			break;
 		case RIGHT:
+			Log.v("EconomyController.processEvent", "Processing event: " + event.getSecondaryEffect().getEventName());
+			Log.v("EconomyController.processEvent", "Resource: " + event.getSecondaryEffect().getEventResources()[0].getResource() + " Quantity: " + event.getSecondaryEffect().getEventResources()[0].getQuantity());
 			this.applyEvent(event.getSecondaryEffect());
-			//Log.v("processEvent", "Resource: " + event.getSecondaryResource() + " Quantity: " + event.getSecondaryQuantity());
 			break;
 		}
 
@@ -154,6 +161,14 @@ public class EconomyController implements IEconomyProgress{
 			this.handleInvasionEvent(eventEffect);
 			break;
 		}
+
+		Log.v("EconomyController.applyEvent", "Worker status");
+		Log.v("EconomyController.applyEvent", "Wood worker: " + this.getWoodWorkers());
+		Log.v("EconomyController.applyEvent", "Stone worker: " + this.getStoneWorkers());
+		Log.v("EconomyController.applyEvent", "Food worker: " + this.getFoodWorkers());
+		Log.v("EconomyController.applyEvent", "Builder: " + this.getBuilders());
+		Log.v("EconomyController.applyEvent", "Soldier: " + this.getSoldiers());
+		Log.v("EconomyController.applyEvent", "Coins: " + this.getCoins());
 	}
 
 	private void handleInvasionEvent(EventEffectBean eventEffect){
@@ -253,6 +268,7 @@ public class EconomyController implements IEconomyProgress{
 			}
 			break;
 		}
+		Log.v("EconomyController.handleResourceEvent", "Resource: " + eventEffect.getEventResources()[0].getResource() + " behavior: " + eventEffect.getBehavior() + " quantity: " + eventEffect.getEventResources()[0].getQuantity());
 	}
 
 	private void handleRaid(EventEffectBean eventEffect){
@@ -293,7 +309,7 @@ public class EconomyController implements IEconomyProgress{
 
 		float quantity = eventEffect.getEventResources()[0].getQuantity();
 
-		switch(eventEffect.getSpecialEventName()){
+		switch(eventEffect.getEventName()){
 		case BABY_BOOM:
 			int newborns = (int) (this.getTotalPopulation() * quantity * 0.01f * 0.5f); // percentage; half of population are women
 			int incrementalValue = (int) (newborns * 0.25);
@@ -348,7 +364,8 @@ public class EconomyController implements IEconomyProgress{
 		}
 	}
 
-	private int getTotalPopulation(){
+	@Override
+	public int getTotalPopulation(){
 		return this.getBuilders() + this.getStoneWorkers() + this.getWoodWorkers() + this.getFoodWorkers() + this.getSoldiers();
 	}
 
@@ -379,5 +396,25 @@ public class EconomyController implements IEconomyProgress{
 	@Override
 	public int getLevel() {
 		return (int) (this.wonder.getCompleted() * 0.1);
+	}
+
+	@Override
+	public float getWoodMaintenace() {
+		return this.wonder.getWoodMaintenace();
+	}
+
+	@Override
+	public float getStoneMaintenace() {
+		return this.wonder.getStoneMaintenace();
+	}
+
+	@Override
+	public float getWoodBuilding() {
+		return this.wonder.getWoodBuilding();
+	}
+
+	@Override
+	public float getStoneBuilding() {
+		return this.wonder.getStoneBuilding();
 	}
 }

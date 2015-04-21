@@ -11,4 +11,9 @@ public interface IWonderConstruction {
 
 	public float getStoneStored();
 	public float getWoodStored();
+
+	public float getWoodMaintenace();
+	public float getStoneMaintenace();
+	public float getWoodBuilding();
+	public float getStoneBuilding();
 }

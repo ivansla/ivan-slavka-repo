@@ -10,5 +10,7 @@ public enum GeneralSpriteEnum {
 	STONE_WAREHOUSE,
 	WOOD_WAREHOUSE,
 	BARQUE,
-	WONDER
+	WONDER,
+	FARM_CAMP,
+	QUARRY_CAMP
 }

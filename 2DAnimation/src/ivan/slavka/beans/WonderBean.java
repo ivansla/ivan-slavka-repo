@@ -2,6 +2,7 @@ package ivan.slavka.beans;
 
 import ivan.slavka.enums.ResourcesEnum;
 import ivan.slavka.interfaces.IWonderConstruction;
+import android.util.Log;
 
 public class WonderBean {
 
@@ -24,6 +25,11 @@ public class WonderBean {
 	private float stoneStored = 0f;
 	private float woodRemaining = WOOD_NEEDED;
 	private float stoneRemaining = STONE_NEEDED;
+
+	private volatile float woodMaintenace;
+	private volatile float stoneMaintenace;
+	private volatile float woodBuilding;
+	private volatile float stoneBuilding;
 
 	private IWonderConstruction wonderConstructionController;
 
@@ -125,11 +131,19 @@ public class WonderBean {
 	}
 
 	public void updateWonderConstruction(){
+		Log.v("WonderBean.updateWonderConstruction", "Resources before using. Wood stored: " + this.woodStored + " Stone stored: " + this.stoneStored);
+		Log.v("WonderBean.updateWonderConstruction", "Resources needed. Wood needed: " + this.woodRemaining + " Stone needed: " + this.stoneRemaining);
+
 		this.maintainWonderConstruction();
 
 		int totalBuilders = this.wonderConstructionController.getBuilders();
 
+		this.woodBuilding = 0f;
+		this.stoneBuilding = 0f;
+
 		if(this.woodStored > 0 || this.stoneStored > 0){
+			Log.v("WonderBean.updateWonderConstruction", "Constructing Wonder");
+
 			int woodBuilders = (int) (this.woodStored / (WOOD_NEEDED * CONSTRUCTION_MULTIPLICATOR));
 			int stoneBuilders = (int) (this.stoneStored / (STONE_NEEDED * CONSTRUCTION_MULTIPLICATOR));
 
@@ -153,6 +167,7 @@ public class WonderBean {
 	}
 
 	private void maintainWonderConstruction(){
+		Log.v("WonderBean.maintainWonderConstruction", "Maintaining Wonder Construction");
 
 		float woodMissing = 0f;
 		float stoneMissing = 0f;
@@ -172,8 +187,13 @@ public class WonderBean {
 			quotient = 0.5f;
 		}
 
-		woodMissing = this.increaseWoodStored(-MAINTENANCE_WOOD_REQUIRED_BASE * level * quotient);
-		stoneMissing = this.increaseStoneStored(-MAINTENANCE_STONE_REQUIRED_BASE * level * quotient);
+		this.woodMaintenace = MAINTENANCE_WOOD_REQUIRED_BASE * level * quotient;
+		this.stoneMaintenace = MAINTENANCE_STONE_REQUIRED_BASE * level * quotient;
+
+		Log.v("WonderBean.maintainWonderConstruction", "Wood Maintenance: " + this.woodMaintenace + " Stone Maintenance: " + this.stoneMaintenace);
+
+		woodMissing = this.increaseWoodStored(-this.woodMaintenace);
+		stoneMissing = this.increaseStoneStored(-this.stoneMaintenace);
 
 		this.calculateWonderMaintenanceDamage(woodMissing, ResourcesEnum.WOOD, level);
 		this.calculateWonderMaintenanceDamage(stoneMissing, ResourcesEnum.STONE, level);
@@ -197,15 +217,27 @@ public class WonderBean {
 		}
 
 		this.completed += percentageMissing;
+
+		Log.v("WonderBean.calculateWonderMaintenanceDamage", "Damaging Wonder due to missing resource: " + resource + " missing quantity: " + missingQuantity);
+		Log.v("WonderBean.calculateWonderMaintenanceDamage", "Wonder percent: " + this.completed);
 	}
 
 	private void constructWonderWithAllMaterials(int usedBuilders){
+
+		this.woodBuilding += WOOD_NEEDED * CONSTRUCTION_MULTIPLICATOR * usedBuilders;
+		this.stoneBuilding += STONE_NEEDED * CONSTRUCTION_MULTIPLICATOR * usedBuilders;
+
 		this.completed += (CONSTRUCTION_MULTIPLICATOR * usedBuilders);
 		this.woodStored -= (WOOD_NEEDED * CONSTRUCTION_MULTIPLICATOR * usedBuilders);
 		this.stoneStored -= (STONE_NEEDED * CONSTRUCTION_MULTIPLICATOR * usedBuilders);
+		Log.v("WonderBean.constructWonderWithAllMaterials", "Wood used: " + this.woodBuilding + " Stone used: " + this.stoneBuilding);
+		Log.v("WonderBean.constructWonderWithAllMaterials", "Wonder percent: " + this.completed);
 	}
 
 	private void constructWonderWithMissingMaterials(int usedBuilders){
+		this.woodBuilding += WOOD_NEEDED * CONSTRUCTION_MULTIPLICATOR * usedBuilders;
+		this.stoneBuilding += STONE_NEEDED * CONSTRUCTION_MULTIPLICATOR * usedBuilders;
+
 		float woodNeeded = (WOOD_NEEDED * CONSTRUCTION_MULTIPLICATOR * usedBuilders);
 		float stoneNeeded = (STONE_NEEDED * CONSTRUCTION_MULTIPLICATOR * usedBuilders);
 		this.completed += (0.5 * CONSTRUCTION_MULTIPLICATOR * usedBuilders);
@@ -216,6 +248,25 @@ public class WonderBean {
 		if(stoneNeeded <= this.stoneStored){
 			this.stoneStored -= stoneNeeded;
 		}
+
+		Log.v("WonderBean.constructWonderWithMissingMaterials", "Wood used: " + this.woodBuilding + " Stone used: " + this.stoneBuilding);
+		Log.v("WonderBean.constructWonderWithMissingMaterials", "Wonder percent: " + this.completed);
+	}
+
+	public float getWoodMaintenace() {
+		return this.woodMaintenace;
+	}
+
+	public float getStoneMaintenace() {
+		return this.stoneMaintenace;
+	}
+
+	public float getWoodBuilding() {
+		return this.woodBuilding;
+	}
+
+	public float getStoneBuilding() {
+		return this.stoneBuilding;
 	}
 }
 
