@@ -86,12 +86,15 @@ public class AnimationSprite {
 					return 0;
 				}
 			} else {
-				if(this.economyController.getWoodIncome() < woodRequirement){ // Income is lower than necessity
+				if(woodRequirement <= 0){
+					return 2;
+				}
+
+				if(this.economyController.getWoodStored() < woodRequirement * 2){ // Income is lower than necessity
 					return 1;
 				}
 
-				if((this.economyController.getWoodIncome() >= woodRequirement) &&
-						this.economyController.getWoodStored() >= woodRequirement){ // Income is bigger than necessity and resource stored is more than the necessity
+				if(this.economyController.getWoodStored() >= woodRequirement * 5){ // Income is bigger than necessity and resource stored is more than the necessity
 					return 3;
 				}
 			}
@@ -105,12 +108,15 @@ public class AnimationSprite {
 					return 0;
 				}
 			} else {
-				if(this.economyController.getStoneIncome() < stoneRequirement){ // Income is lower than necessity
+				if(stoneRequirement <= 0){
+					return 2;
+				}
+
+				if(this.economyController.getStoneStored() < stoneRequirement * 2){ // Income is lower than necessity
 					return 1;
 				}
 
-				if((this.economyController.getStoneIncome() >= stoneRequirement) &&
-						this.economyController.getStoneStored() >= stoneRequirement){ // Income is bigger than necessity and resource stored is more than the necessity
+				if(	this.economyController.getStoneStored() >= stoneRequirement * 5){ // Income is bigger than necessity and resource stored is more than the necessity
 					return 3;
 				}
 			}
@@ -122,12 +128,11 @@ public class AnimationSprite {
 					return 0;
 				}
 			} else {
-				if(this.economyController.getFoodIncome() < 0){ // Income is lower than necessity
+				if(this.economyController.getFoodStored() < (this.economyController.getFoodConsumption() * 2)){ // Income is lower than necessity
 					return 1;
 				}
 
-				if(this.economyController.getFoodIncome() > 0 &&
-						this.economyController.getFoodStored() > (this.economyController.getFoodIncome() * 5)){ // Income is bigger than necessity and resource stored is more than the necessity
+				if(	this.economyController.getFoodStored() > (this.economyController.getFoodConsumption() * 5)){ // Income is bigger than necessity and resource stored is more than the necessity
 					return 3;
 				}
 			}

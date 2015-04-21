@@ -196,13 +196,16 @@ public class EconomyStatusBean {
 		this.consumeFood();
 	}
 
+	public float getFoodConsumtion(){
+		int numberOfPeople = this.foodWorkers + this.woodWorkers + this.stoneWorkers + this.builders + this.soldiers;
+		return (numberOfPeople * FOOD_CONSUMPTION);
+	}
+
 	private void consumeFood(){
 
-		int numberOfPeople = this.foodWorkers + this.woodWorkers + this.stoneWorkers + this.builders + this.soldiers;
-		this.foodIncome = (FOOD_MULTIPLICATOR * this.foodWorkers) - (numberOfPeople * FOOD_CONSUMPTION);
+		this.foodIncome = (FOOD_MULTIPLICATOR * this.foodWorkers) - this.getFoodConsumtion();
 		this.foodStorage += this.foodIncome;
-		Log.v("EconomyStatusBean.consumeFood", "Food Income: " + this.foodIncome + " Food Storage:" + this.foodStorage);
-
+		Log.v("EconomyStatusBean.consumeFood", "Food Income: " + this.foodIncome + " Food Storage:" + this.foodStorage + " Food consumption: " + this.getFoodConsumtion());
 
 		if(this.foodStorage <= 0){
 			this.turnsWithoutFood++;

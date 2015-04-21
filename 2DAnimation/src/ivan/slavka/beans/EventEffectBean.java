@@ -122,7 +122,7 @@ public class EventEffectBean {
 			}
 			break;
 		case RAID:
-			filterSuccessfull =  this.filterPossibleAttributes(this.raidEventAttributes, level);
+			filterSuccessfull = this.filterPossibleAttributes(this.raidEventAttributes, level);
 			if(filterSuccessfull){
 				attr = this.possibleAttributes[this.random.nextInt(this.lastPossibleAttributeIndex)];
 				quantity = this.random.nextInt(attr.maxValue - attr.minValue + 1) + attr.minValue;

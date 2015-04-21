@@ -114,7 +114,7 @@ public class EconomyController implements IEconomyProgress{
 	@Override
 	public void processEvent(IEvent event, InputControlEnum input) {
 		Log.v("EconomyController.processEvent", "*********************************************************************");
-		Log.v("EconomyController.processEvent", "Possible events: " + event.getPrimaryEffect().getEventName() + ";" + event.getSecondaryEffect().getEventName());
+		Log.v("EconomyController.processEvent", "Possible events: " + event.getPrimaryEffect().getEventName() + " behavior: " + event.getPrimaryEffect().getBehavior() + ";" + event.getSecondaryEffect().getEventName() + " behavior: " + event.getSecondaryEffect().getBehavior());
 
 		switch(input){
 		case LEFT:
@@ -137,9 +137,11 @@ public class EconomyController implements IEconomyProgress{
 		if(this.turnsToInvasion <= 0){
 			this.invasionEvent.rollAttributes(EventTypeEnum.ATTACK, this.getLevel(), -1);
 			this.resetInvasion();
+			Log.v("EconomyController.processEvent", "Processing invasion event: " + this.invasionEvent.getEventType());
 			this.applyEvent(this.invasionEvent);
 		} else {
 			this.turnsToInvasion--;
+			Log.v("EconomyController.processEvent", "Turns to invasion: " + this.turnsToInvasion);
 		}
 	}
 
@@ -416,5 +418,10 @@ public class EconomyController implements IEconomyProgress{
 	@Override
 	public float getStoneBuilding() {
 		return this.wonder.getStoneBuilding();
+	}
+
+	@Override
+	public float getFoodConsumption() {
+		return this.economyStatus.getFoodConsumtion();
 	}
 }

@@ -25,7 +25,7 @@ import android.view.WindowManager;
 @SuppressLint("WrongCall")
 public class GameView extends AbstractGameView {
 	public final static long FPS = 30;
-	private final static int SPRITE_DELAY = 3000;
+	private final static int SPRITE_DELAY = 2000;
 	private final static int NUMBER_OF_SPRITES = 30;
 	private static float LOWEST_POINT;
 	private static float SPRITE_PADDING;
@@ -138,6 +138,10 @@ public class GameView extends AbstractGameView {
 			sprite.setSpriteYDestination(lowerTo);
 			this.spriteStartTime = System.currentTimeMillis();
 
+			if(this.numberOfActiveSprites == 0){
+				sprite.setLowestSprite(true);
+			}
+
 			this.activeSpriteArray[this.activeSpriteIndex] = sprite;
 			this.numberOfActiveSprites++;
 
@@ -150,6 +154,7 @@ public class GameView extends AbstractGameView {
 				this.numberOfActiveSprites--;
 
 				this.processTurn(this.activeSprite.getEvent(), this.activeSprite.getSide());
+				this.activeSprite.setLowestSprite(false);
 
 				this.lowerRemainingSprites();
 				this.activeSprite = null;
@@ -200,9 +205,18 @@ public class GameView extends AbstractGameView {
 	private void lowerRemainingSprites(){
 		Sprite s;
 		int spriteIndex = 0;
+
+		boolean isFirstOccurence = true;
+
 		for(int i = 0; i < NUMBER_OF_SPRITES; i++){
 			s = this.activeSpriteArray[i];
+
 			if(s != null){
+				if(isFirstOccurence){
+					s.setLowestSprite(true);
+					isFirstOccurence = false;
+				}
+
 				float lowerTo = LOWEST_POINT - (spriteIndex * (Sprite.HEIGHT_SIZE + SPRITE_PADDING));
 				s.setSpriteYDestination(lowerTo);
 				spriteIndex++;

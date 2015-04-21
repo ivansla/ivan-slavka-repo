@@ -33,6 +33,7 @@ public class Sprite {
 
 
 	//private float distanceY;
+	private boolean isLowestSprite = false;
 	private Bitmap[] bitmaps;
 	private PointF position;// = new PointF(200f, 100f);
 	private float deltaX;
@@ -185,6 +186,10 @@ public class Sprite {
 	}
 
 	public void spriteActionDown(float x){
+		if(!this.isLowestSprite){
+			return;
+		}
+
 		if(!this.isPerformingAnimation){
 			this.isPressed = true;
 			this.deltaX = x - this.position.x;
@@ -196,6 +201,10 @@ public class Sprite {
 	}
 
 	public void spriteActionUp(float x){
+		if(!this.isLowestSprite){
+			return;
+		}
+
 		if(!this.isPerformingAnimation){
 			this.isPressed = false;
 			if(this.isInTolerance){
@@ -229,7 +238,7 @@ public class Sprite {
 	}
 
 	public void spriteActionMove(float x){
-		if(!this.isPerformingAnimation){
+		if(!this.isPerformingAnimation && this.isLowestSprite){
 			this.setSpritePath(x, 0);
 			this.isInTolerance = this.calculateIsInTolerance(x);
 		}
@@ -315,5 +324,13 @@ public class Sprite {
 		} else {
 			return InputControlEnum.RIGHT;
 		}
+	}
+
+	public boolean isLowestSprite() {
+		return this.isLowestSprite;
+	}
+
+	public void setLowestSprite(boolean isLowestSprite) {
+		this.isLowestSprite = isLowestSprite;
 	}
 }

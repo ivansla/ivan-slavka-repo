@@ -48,23 +48,25 @@ public class EventBean implements IEvent{
 					break;
 				}
 			}
-
 		}
 
 		while(this.eventEffects[0].getEventType().equals(this.eventEffects[1].getEventType()) &&
 				this.eventEffects[0].getEventResources()[0].getResource().equals(this.eventEffects[1].getEventResources()[0].getResource())){
 
-			int roll = this.random.nextInt(3);
-			switch(roll){
-			case 0:
-				this.eventEffects[1].rollAttributes(EventTypeEnum.WORKER, level, roll);
-				break;
-			case 1:
-				this.eventEffects[1].rollAttributes(EventTypeEnum.RESOURCE, level, roll);
-				break;
-			case 2:
-				this.eventEffects[1].rollAttributes(EventTypeEnum.RAID, level, roll);
-				break;
+			boolean successfullRoll = false;
+			while(!successfullRoll){
+				int roll = this.random.nextInt(3);
+				switch(roll){
+				case 0:
+					successfullRoll = this.eventEffects[1].rollAttributes(EventTypeEnum.WORKER, level, roll);
+					break;
+				case 1:
+					successfullRoll = this.eventEffects[1].rollAttributes(EventTypeEnum.RESOURCE, level, roll);
+					break;
+				case 2:
+					successfullRoll = this.eventEffects[1].rollAttributes(EventTypeEnum.RAID, level, roll);
+					break;
+				}
 			}
 		}
 	}
