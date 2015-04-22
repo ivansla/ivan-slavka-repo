@@ -2,6 +2,7 @@ package ivan.slavka.generators;
 
 import ivan.slavka.beans.EventBean;
 import ivan.slavka.enums.EventTypeEnum;
+import ivan.slavka.interfaces.IEconomyProgress;
 import ivan.slavka.interfaces.IEvent;
 import ivan.slavka.interfaces.IEventGenerator;
 
@@ -13,6 +14,14 @@ public class EventGenerator implements IEventGenerator{
 
 	private Random randomizer = new Random();
 	private List<EventBean> eventPool = new ArrayList<EventBean>();
+
+	private IEconomyProgress economyController;
+
+	public EventGenerator(){}
+
+	public EventGenerator(IEconomyProgress economyController){
+		this.economyController = economyController;
+	}
 
 	@Override
 	public IEvent generateEvent(int level){
@@ -32,7 +41,7 @@ public class EventGenerator implements IEventGenerator{
 		}
 
 		if(!isEventAvailable){
-			event = new EventBean();
+			event = new EventBean(this.economyController);
 			this.eventPool.add(event);
 		}
 

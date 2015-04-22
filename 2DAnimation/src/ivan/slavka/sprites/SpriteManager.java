@@ -19,7 +19,7 @@ import android.graphics.BitmapFactory;
 public class SpriteManager {
 
 	private List<Sprite> spritePool = new ArrayList<Sprite>();
-	private IEventGenerator eventGenerator = new EventGenerator();
+	private IEventGenerator eventGenerator;
 	private IEconomyProgress economyController;
 
 	private Map<EventSpriteEnum, Bitmap> eventSpriteBitmapMap = new HashMap<>();
@@ -36,6 +36,8 @@ public class SpriteManager {
 	}
 
 	public SpriteManager(GameView gameView, IEconomyProgress economyController){
+
+		this.eventGenerator = new EventGenerator(economyController);
 		this.gameView = gameView;
 		this.economyController = economyController;
 		this.loadResources();

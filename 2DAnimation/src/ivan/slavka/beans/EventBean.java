@@ -1,6 +1,7 @@
 package ivan.slavka.beans;
 
 import ivan.slavka.enums.EventTypeEnum;
+import ivan.slavka.interfaces.IEconomyProgress;
 import ivan.slavka.interfaces.IEvent;
 
 import java.util.Random;
@@ -10,10 +11,16 @@ public class EventBean implements IEvent{
 	private boolean isReleased = false;
 	private boolean isSpecial = false;
 	private Random random = new Random();
-	private EventEffectBean[] eventEffects = {
-			new EventEffectBean(),
-			new EventEffectBean()
-	};
+	private EventEffectBean[] eventEffects;
+
+	public EventBean(){}
+
+	public EventBean(IEconomyProgress economyController){
+
+		this.eventEffects =  new EventEffectBean[2];
+		this.eventEffects[0] = new EventEffectBean(economyController);
+		this.eventEffects[1] = new EventEffectBean(economyController);
+	}
 
 	public void generateSpecialEvent(int level, int roll){
 		this.isSpecial = true;

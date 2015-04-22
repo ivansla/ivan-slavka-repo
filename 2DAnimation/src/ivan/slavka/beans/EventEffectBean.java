@@ -4,11 +4,13 @@ import ivan.slavka.enums.EventBehaviorEnum;
 import ivan.slavka.enums.EventSpriteEnum;
 import ivan.slavka.enums.EventTypeEnum;
 import ivan.slavka.enums.SpecialEventEnum;
+import ivan.slavka.interfaces.IEconomyProgress;
 
 import java.util.Random;
 
 public class EventEffectBean {
 
+	private IEconomyProgress economyController;
 	private static int NUMBER_OF_RESOURCES = 4;
 	private ResourceBean[] resourceArray = new ResourceBean[NUMBER_OF_RESOURCES];
 
@@ -63,6 +65,11 @@ public class EventEffectBean {
 		}
 	}
 
+	public EventEffectBean(IEconomyProgress economyController){
+		this();
+		this.economyController = economyController;
+	}
+
 	public EventBehaviorEnum getBehavior() {
 		return this.behavior;
 	}
@@ -96,7 +103,25 @@ public class EventEffectBean {
 			}
 			resourceRoll = this.random.nextInt(3);
 			this.resourceArray[0].activateResource(EventSpriteEnum.getEnum(resourceRoll), quantity);
+
+			switch(EventSpriteEnum.getEnum(resourceRoll)){
+			case STONE:
+				if(this.economyController.getStoneStored() <= 0){
+					while(resourceRoll == EventSpriteEnum.SOLDIER.getCode()){
+						resourceRoll = this.random.nextInt(3);
+						this.resourceArray[0].activateResource(EventSpriteEnum.getEnum(resourceRoll), quantity);
+					}
+				}
+				break;
+			case WOOD:
+				break;
+			case FOOD:
+				break;
+			}
+
+
 			this.eventName = EventSpriteEnum.getEnum(resourceRoll);
+			isRollSuccessfull = true;
 			break;
 		case WORKER:
 			filterSuccessfull = this.filterPossibleAttributes(level);
@@ -106,6 +131,13 @@ public class EventEffectBean {
 				this.behavior = EventBehaviorEnum.ADDITION;
 				resourceRoll = this.random.nextInt(5) + 4;
 				this.resourceArray[0].activateResource(EventSpriteEnum.getEnum(resourceRoll), quantity);
+				if(EventSpriteEnum.getEnum(resourceRoll).equals(EventSpriteEnum.SOLDIER) && this.economyController.getCoins() < this.resourceArray[0].getPrice()){
+					while(resourceRoll == EventSpriteEnum.SOLDIER.getCode()){
+						resourceRoll = this.random.nextInt(5) + 4;
+						this.resourceArray[0].activateResource(EventSpriteEnum.getEnum(resourceRoll), quantity);
+					}
+				}
+
 				isRollSuccessfull = true;
 				this.eventName = EventSpriteEnum.getEnum(resourceRoll);
 			}
