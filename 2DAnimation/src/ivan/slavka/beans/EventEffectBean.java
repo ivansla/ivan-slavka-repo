@@ -107,15 +107,18 @@ public class EventEffectBean {
 			switch(EventSpriteEnum.getEnum(resourceRoll)){
 			case STONE:
 				if(this.economyController.getStoneStored() <= 0){
-					while(resourceRoll == EventSpriteEnum.SOLDIER.getCode()){
-						resourceRoll = this.random.nextInt(3);
-						this.resourceArray[0].activateResource(EventSpriteEnum.getEnum(resourceRoll), quantity);
-					}
+					return false;
 				}
 				break;
 			case WOOD:
+				if(this.economyController.getWoodStored() <= 0){
+					return false;
+				}
 				break;
 			case FOOD:
+				if(this.economyController.getFoodStored() <= 0){
+					return false;
+				}
 				break;
 			}
 

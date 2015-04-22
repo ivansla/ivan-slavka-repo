@@ -29,6 +29,7 @@ public class EconomyController implements IEconomyProgress{
 	private EventEffectBean invasionEvent = new EventEffectBean();
 
 	private int turnsToInvasion;
+	private boolean isGameOver = false;
 
 	public EconomyController(){
 		this.economyStatus = new EconomyStatusBean(this);
@@ -130,6 +131,11 @@ public class EconomyController implements IEconomyProgress{
 		}
 
 		this.economyStatus.updateEconomyStatus();
+		if(this.economyStatus.isCivilizationDead()){
+			this.isGameOver = true;
+			return;
+		}
+
 		this.wonder.increaseStoneStored(this.economyStatus.getStoneIncome());
 		this.wonder.increaseWoodStored(this.economyStatus.getWoodIncome());
 		this.wonder.updateWonderConstruction();
@@ -423,5 +429,18 @@ public class EconomyController implements IEconomyProgress{
 	@Override
 	public float getFoodConsumption() {
 		return this.economyStatus.getFoodConsumtion();
+	}
+
+	@Override
+	public void restartGame() {
+		this.isGameOver = false;
+
+		this.economyStatus.restartEconomyStatus();
+		this.wonder.restartWonder();
+	}
+
+	@Override
+	public boolean isGameOver() {
+		return this.isGameOver;
 	}
 }

@@ -104,4 +104,11 @@ public class SpriteManager {
 	public Bitmap getGeneralSprite(GeneralSpriteEnum generalSpriteEnum){
 		return this.generalSpriteBitmapMap.get(generalSpriteEnum);
 	}
+
+	public void restartSprites(){
+		for(Sprite s : this.spritePool){
+			s.setReleased(true);
+			s.deactivateSprite();
+		}
+	}
 }

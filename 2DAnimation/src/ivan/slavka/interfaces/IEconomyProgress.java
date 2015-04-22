@@ -21,4 +21,6 @@ public interface IEconomyProgress extends IWonderConstruction{
 	public float getFoodConsumption();
 
 	public void processEvent(IEvent event, InputControlEnum input);
+	public void restartGame();
+	public boolean isGameOver();
 }

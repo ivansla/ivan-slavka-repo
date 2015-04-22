@@ -268,5 +268,13 @@ public class WonderBean {
 	public float getStoneBuilding() {
 		return this.stoneBuilding;
 	}
+
+	public void restartWonder(){
+		this.woodStored = 0;
+		this.stoneStored = 0;
+		this.completed = 0;
+		this.woodRemaining = WOOD_NEEDED;
+		this.stoneRemaining = STONE_NEEDED;
+	}
 }
 

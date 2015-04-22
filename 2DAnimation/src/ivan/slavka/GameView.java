@@ -8,6 +8,7 @@ import ivan.slavka.interfaces.IEconomyProgress;
 import ivan.slavka.interfaces.IEvent;
 import ivan.slavka.sprites.AnimationSprite;
 import ivan.slavka.sprites.EconomyStatusSprite;
+import ivan.slavka.sprites.GameOverSprite;
 import ivan.slavka.sprites.Sprite;
 import ivan.slavka.sprites.SpriteManager;
 import ivan.slavka.sprites.WonderConstructionSprite;
@@ -18,6 +19,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.WindowManager;
@@ -46,6 +48,7 @@ public class GameView extends AbstractGameView {
 
 
 	private AnimationSprite[] generalSprites = new AnimationSprite[10];
+	private GameOverSprite gameOverSprite;
 
 	private EconomyStatusSprite economySprite;// = new EconomyStatusSprite();
 	private WonderConstructionSprite wonderSprite;
@@ -82,6 +85,9 @@ public class GameView extends AbstractGameView {
 		this.drawPaint.setStyle(Paint.Style.FILL);
 
 		this.prepareGeneralSprites();
+
+		this.gameOverSprite = new GameOverSprite();
+		this.gameOverSprite.setSpritePosition(200, 200);
 	}
 
 	private void prepareGeneralSprites(){
@@ -131,33 +137,36 @@ public class GameView extends AbstractGameView {
 
 	@Override
 	public void updateGame(){
-		long timePassed = System.currentTimeMillis() - this.spriteStartTime;
-		if(timePassed > SPRITE_DELAY && this.numberOfActiveSprites < MAX_NUMBER_OF_SPRITES){// && this.activeSpriteIndex < 0){
-			Sprite sprite = this.spriteManager.retrieveSprite();
-			float lowerTo = LOWEST_POINT - ((this.numberOfActiveSprites) * (Sprite.HEIGHT_SIZE + SPRITE_PADDING));
-			sprite.setSpriteYDestination(lowerTo);
-			this.spriteStartTime = System.currentTimeMillis();
+		if(!this.economyProgressController.isGameOver()){
 
-			if(this.numberOfActiveSprites == 0){
-				sprite.setLowestSprite(true);
+			long timePassed = System.currentTimeMillis() - this.spriteStartTime;
+			if(timePassed > SPRITE_DELAY && this.numberOfActiveSprites < MAX_NUMBER_OF_SPRITES){// && this.activeSpriteIndex < 0){
+				Sprite sprite = this.spriteManager.retrieveSprite();
+				float lowerTo = LOWEST_POINT - ((this.numberOfActiveSprites) * (Sprite.HEIGHT_SIZE + SPRITE_PADDING));
+				sprite.setSpriteYDestination(lowerTo);
+				this.spriteStartTime = System.currentTimeMillis();
+
+				if(this.numberOfActiveSprites == 0){
+					sprite.setLowestSprite(true);
+				}
+
+				this.activeSpriteArray[this.activeSpriteIndex] = sprite;
+				this.numberOfActiveSprites++;
+
+				this.incrementActiveSpritesIndex();
 			}
 
-			this.activeSpriteArray[this.activeSpriteIndex] = sprite;
-			this.numberOfActiveSprites++;
+			if(this.activeSprite != null){
+				if(!this.activeSprite.isPerformingAnimation() && this.activeSprite.isActivated()){
+					this.activeSpriteArray[this.selectedSpriteIndex] = null;
+					this.numberOfActiveSprites--;
 
-			this.incrementActiveSpritesIndex();
-		}
+					this.processTurn(this.activeSprite.getEvent(), this.activeSprite.getSide());
+					this.activeSprite.setLowestSprite(false);
 
-		if(this.activeSprite != null){
-			if(!this.activeSprite.isPerformingAnimation() && this.activeSprite.isActivated()){
-				this.activeSpriteArray[this.selectedSpriteIndex] = null;
-				this.numberOfActiveSprites--;
-
-				this.processTurn(this.activeSprite.getEvent(), this.activeSprite.getSide());
-				this.activeSprite.setLowestSprite(false);
-
-				this.lowerRemainingSprites();
-				this.activeSprite = null;
+					this.lowerRemainingSprites();
+					this.activeSprite = null;
+				}
 			}
 		}
 	}
@@ -169,15 +178,22 @@ public class GameView extends AbstractGameView {
 		final int Y = (int) event.getRawY();
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
-			Sprite s;
-			for(int i = 0; i < NUMBER_OF_SPRITES; i++){
-				s = this.activeSpriteArray[i];
-				if(s != null){
-					if(s.isCollition(event.getX(), event.getY())){
-						this.activeSprite = s;
-						this.activeSprite.spriteActionDown(X);
-						this.selectedSpriteIndex = i;
+			if(!this.economyProgressController.isGameOver()){
+				Sprite s;
+				for(int i = 0; i < NUMBER_OF_SPRITES; i++){
+					s = this.activeSpriteArray[i];
+					if(s != null){
+						if(s.isCollition(event.getX(), event.getY())){
+							this.activeSprite = s;
+							this.activeSprite.spriteActionDown(X);
+							this.selectedSpriteIndex = i;
+						}
 					}
+				}
+			} else {
+				if(this.gameOverSprite.isCollition(event.getX(), event.getY())){
+					Log.v("GameView.onTouchEvent", "restarting game");
+					this.restartGame();
 				}
 			}
 
@@ -226,21 +242,25 @@ public class GameView extends AbstractGameView {
 
 	@Override
 	public void onDraw(Canvas canvas) {
-		canvas.drawBitmap(this.worldBitmap, 0f, 0f, null);
-		for(int i = 0; i < this.generalSprites.length; i++){
-			if(this.generalSprites[i] != null){
-				this.generalSprites[i].onDraw(canvas);
+		if(!this.economyProgressController.isGameOver()){
+			canvas.drawBitmap(this.worldBitmap, 0f, 0f, null);
+			for(int i = 0; i < this.generalSprites.length; i++){
+				if(this.generalSprites[i] != null){
+					this.generalSprites[i].onDraw(canvas);
+				}
 			}
-		}
 
-		//this.economySprite.onDraw(canvas);
-		//this.wonderSprite.onDraw(canvas);
-		Sprite s;
-		for(int i = 0; i < NUMBER_OF_SPRITES; i++){
-			s = this.activeSpriteArray[i];
-			if(s != null){
-				s.onDraw(canvas);
+			//this.economySprite.onDraw(canvas);
+			//this.wonderSprite.onDraw(canvas);
+			Sprite s;
+			for(int i = 0; i < NUMBER_OF_SPRITES; i++){
+				s = this.activeSpriteArray[i];
+				if(s != null){
+					s.onDraw(canvas);
+				}
 			}
+		} else {
+			this.gameOverSprite.onDraw(canvas);
 		}
 	}
 
@@ -253,5 +273,16 @@ public class GameView extends AbstractGameView {
 
 	private void processTurn(IEvent event, InputControlEnum input){
 		this.economyProgressController.processEvent(event, input);// performConstruction();
+	}
+
+	private void restartGame(){
+		this.economyProgressController.restartGame();
+		this.numberOfActiveSprites = 0;
+
+		for(int i = 0; i < this.activeSpriteArray.length; i++){
+			this.activeSpriteArray[i] = null;
+		}
+
+		this.spriteManager.restartSprites();
 	}
 }
