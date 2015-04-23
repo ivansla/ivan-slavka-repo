@@ -14,7 +14,7 @@ public class WonderBean {
 
 	private static float WOOD_NEEDED = WOOD_MULTIPLICATOR * COMMON_BASE;
 	private static float STONE_NEEDED = STONE_MULTIPLICATOR * COMMON_BASE;
-	private static float CONSTRUCTION_MULTIPLICATOR = 0.01f;
+	private static float CONSTRUCTION_MULTIPLICATOR = 0.1f;
 
 	private static float MAINTENANCE_QUOTIENT = 0.2f;
 	private static float MAINTENANCE_WOOD_REQUIRED_BASE = WOOD_NEEDED * MAINTENANCE_QUOTIENT;

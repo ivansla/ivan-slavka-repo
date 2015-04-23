@@ -55,7 +55,7 @@ public class GameView extends AbstractGameView {
 
 	private Paint drawPaint;
 
-	private Sprite activeSprite = null;
+	private volatile Sprite activeSprite = null;
 	private Bitmap worldBitmap = null;
 
 	public GameView(Context context) {

@@ -117,6 +117,7 @@ public class Sprite {
 		if(!this.isPressed && !this.isClicked){
 			if(this.spriteDestinationY >= this.position.y + this.velocityY){
 				this.position.y += this.velocityY;
+				this.isPerformingAnimation = true;
 			} else {
 				this.position.y = this.spriteDestinationY;
 				this.isPerformingAnimation = false;
@@ -181,6 +182,10 @@ public class Sprite {
 	}
 
 	public boolean isCollition(double x2, double y2) {
+		if(this.isPerformingAnimation){
+			return false;
+		}
+
 		boolean isCollition = x2 > this.position.x && x2 < this.position.x + WIDTH_SIZE && y2 > this.position.y && y2 < this.position .y + HEIGHT_SIZE;
 		return isCollition;
 	}
