@@ -28,7 +28,7 @@ import android.view.WindowManager;
 public class GameView extends AbstractGameView {
 	public final static long FPS = 30;
 	private final static int SPRITE_DELAY = 2000;
-	private final static int NUMBER_OF_SPRITES = 30;
+	private final static int NUMBER_OF_SPRITES = 7;
 	private static float LOWEST_POINT;
 	private static float SPRITE_PADDING;
 	private static int MAX_NUMBER_OF_SPRITES;
@@ -171,6 +171,28 @@ public class GameView extends AbstractGameView {
 		}
 	}
 
+	private void lowerRemainingSprites(){
+		Sprite s;
+		int spriteIndex = 0;
+
+		boolean isFirstOccurence = true;
+
+		for(int i = 0; i < NUMBER_OF_SPRITES; i++){
+			s = this.activeSpriteArray[i];
+
+			if(s != null){
+				if(isFirstOccurence){
+					s.setLowestSprite(true);
+					isFirstOccurence = false;
+				}
+
+				float lowerTo = LOWEST_POINT - (spriteIndex * (Sprite.HEIGHT_SIZE + SPRITE_PADDING));
+				s.setSpriteYDestination(lowerTo);
+				spriteIndex++;
+			}
+		}
+	}
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 
@@ -178,6 +200,13 @@ public class GameView extends AbstractGameView {
 		final int Y = (int) event.getRawY();
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
+
+			Log.v("GameView.onTouchEvent", "ACTION_DOWN");
+
+			if(this.activeSprite != null && this.activeSprite.isPerformingAnimation()){
+				return true;
+			}
+
 			if(!this.economyProgressController.isGameOver()){
 				Sprite s;
 				for(int i = 0; i < NUMBER_OF_SPRITES; i++){
@@ -199,6 +228,7 @@ public class GameView extends AbstractGameView {
 
 			break;
 		case MotionEvent.ACTION_UP:
+			Log.v("GameView.onTouchEvent", "ACTION_UP");
 			if(this.activeSprite != null){
 				this.activeSprite.spriteActionUp(X);
 			}
@@ -208,6 +238,7 @@ public class GameView extends AbstractGameView {
 		case MotionEvent.ACTION_POINTER_UP:
 			break;
 		case MotionEvent.ACTION_MOVE:
+			Log.v("GameView.onTouchEvent", "ACTION_MOVE");
 			if(this.activeSprite != null){
 				this.activeSprite.spriteActionMove(X);
 			}
@@ -216,28 +247,6 @@ public class GameView extends AbstractGameView {
 		}
 
 		return true;
-	}
-
-	private void lowerRemainingSprites(){
-		Sprite s;
-		int spriteIndex = 0;
-
-		boolean isFirstOccurence = true;
-
-		for(int i = 0; i < NUMBER_OF_SPRITES; i++){
-			s = this.activeSpriteArray[i];
-
-			if(s != null){
-				if(isFirstOccurence){
-					s.setLowestSprite(true);
-					isFirstOccurence = false;
-				}
-
-				float lowerTo = LOWEST_POINT - (spriteIndex * (Sprite.HEIGHT_SIZE + SPRITE_PADDING));
-				s.setSpriteYDestination(lowerTo);
-				spriteIndex++;
-			}
-		}
 	}
 
 	@Override
@@ -272,7 +281,7 @@ public class GameView extends AbstractGameView {
 	}
 
 	private void processTurn(IEvent event, InputControlEnum input){
-		this.economyProgressController.processEvent(event, input);// performConstruction();
+		//this.economyProgressController.processEvent(event, input);// performConstruction();
 	}
 
 	private void restartGame(){
