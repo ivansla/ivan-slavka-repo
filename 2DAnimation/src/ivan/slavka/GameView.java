@@ -12,6 +12,9 @@ import ivan.slavka.sprites.GameOverSprite;
 import ivan.slavka.sprites.Sprite;
 import ivan.slavka.sprites.SpriteManager;
 import ivan.slavka.sprites.WonderConstructionSprite;
+
+import java.util.LinkedList;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -34,9 +37,9 @@ public class GameView extends AbstractGameView {
 	private static int MAX_NUMBER_OF_SPRITES;
 
 	private long spriteStartTime;
-	private Sprite[] activeSpriteArray = new Sprite[NUMBER_OF_SPRITES];
-	private int activeSpriteIndex = 0;
-	private int selectedSpriteIndex = 0;
+
+	private LinkedList<Sprite> activeSpriteLinkedList = new LinkedList<Sprite>();
+
 	private volatile int numberOfActiveSprites = 0;
 
 	//private Rect displaySize;
@@ -72,7 +75,6 @@ public class GameView extends AbstractGameView {
 		this.wonderSprite = new WonderConstructionSprite(this.economyProgressController);
 
 		this.spriteManager = new SpriteManager(this, this.economyProgressController);
-
 		this.economySprite.prepareSprite(this, null);
 		this.wonderSprite.prepareSprite(this, null);
 		this.startGame();
@@ -150,15 +152,16 @@ public class GameView extends AbstractGameView {
 					sprite.setLowestSprite(true);
 				}
 
-				this.activeSpriteArray[this.activeSpriteIndex] = sprite;
-				this.numberOfActiveSprites++;
+				this.activeSpriteLinkedList.add(sprite);
 
-				this.incrementActiveSpritesIndex();
+				//this.activeSpriteArray[this.activeSpriteIndex] = sprite;
+				this.numberOfActiveSprites++;
 			}
 
 			if(this.activeSprite != null){
 				if(!this.activeSprite.isPerformingAnimation() && this.activeSprite.isActivated()){
-					this.activeSpriteArray[this.selectedSpriteIndex] = null;
+					//this.activeSpriteArray[this.selectedSpriteIndex] = null;
+					this.activeSpriteLinkedList.pop();
 					this.numberOfActiveSprites--;
 
 					this.processTurn(this.activeSprite.getEvent(), this.activeSprite.getSide());
@@ -172,13 +175,10 @@ public class GameView extends AbstractGameView {
 	}
 
 	private void lowerRemainingSprites(){
-		Sprite s;
 		int spriteIndex = 0;
-
 		boolean isFirstOccurence = true;
 
-		for(int i = 0; i < NUMBER_OF_SPRITES; i++){
-			s = this.activeSpriteArray[i];
+		for(Sprite s : this.activeSpriteLinkedList){
 
 			if(s != null){
 				if(isFirstOccurence){
@@ -208,17 +208,14 @@ public class GameView extends AbstractGameView {
 			}
 
 			if(!this.economyProgressController.isGameOver()){
-				Sprite s;
-				for(int i = 0; i < NUMBER_OF_SPRITES; i++){
-					s = this.activeSpriteArray[i];
-					if(s != null){
-						if(s.isCollition(event.getX(), event.getY())){
-							this.activeSprite = s;
-							this.activeSprite.spriteActionDown(X);
-							this.selectedSpriteIndex = i;
-						}
+				Sprite s = this.activeSpriteLinkedList.peek();
+				if(s != null){
+					if(s.isCollition(event.getX(), event.getY())){
+						this.activeSprite = s;
+						this.activeSprite.spriteActionDown(X);
 					}
 				}
+
 			} else {
 				if(this.gameOverSprite.isCollition(event.getX(), event.getY())){
 					Log.v("GameView.onTouchEvent", "restarting game");
@@ -261,9 +258,9 @@ public class GameView extends AbstractGameView {
 
 			//this.economySprite.onDraw(canvas);
 			//this.wonderSprite.onDraw(canvas);
-			Sprite s;
-			for(int i = 0; i < NUMBER_OF_SPRITES; i++){
-				s = this.activeSpriteArray[i];
+
+			for(Sprite s : this.activeSpriteLinkedList){
+
 				if(s != null){
 					s.onDraw(canvas);
 				}
@@ -273,25 +270,15 @@ public class GameView extends AbstractGameView {
 		}
 	}
 
-	private void incrementActiveSpritesIndex(){
-		this.activeSpriteIndex++;
-		if(this.activeSpriteIndex >= NUMBER_OF_SPRITES){
-			this.activeSpriteIndex = 0;
-		}
-	}
-
 	private void processTurn(IEvent event, InputControlEnum input){
-		//this.economyProgressController.processEvent(event, input);// performConstruction();
+		this.economyProgressController.processEvent(event, input);// performConstruction();
 	}
 
 	private void restartGame(){
 		this.economyProgressController.restartGame();
 		this.numberOfActiveSprites = 0;
 
-		for(int i = 0; i < this.activeSpriteArray.length; i++){
-			this.activeSpriteArray[i] = null;
-		}
-
+		this.activeSpriteLinkedList.clear();
 		this.spriteManager.restartSprites();
 	}
 }
