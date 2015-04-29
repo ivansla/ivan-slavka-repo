@@ -11,10 +11,9 @@ import ivan.slavka.enums.InputControlEnum;
 import ivan.slavka.generators.CombatSimulator;
 import ivan.slavka.interfaces.IEconomyProgress;
 import ivan.slavka.interfaces.IEvent;
+import ivan.slavka.utils.LoggingUtils;
 
 import java.util.Random;
-
-import android.util.Log;
 
 public class EconomyController implements IEconomyProgress{
 
@@ -29,6 +28,7 @@ public class EconomyController implements IEconomyProgress{
 	private EventEffectBean invasionEvent = new EventEffectBean();
 
 	private int turnsToInvasion;
+	private boolean invasionExists;
 	private boolean isGameOver = false;
 
 	public EconomyController(){
@@ -37,6 +37,11 @@ public class EconomyController implements IEconomyProgress{
 		this.combatSimulator = new CombatSimulator(this);
 
 		this.resetInvasion();
+	}
+
+	public EconomyController(boolean invasionExists){
+		this();
+		this.invasionExists = invasionExists;
 	}
 
 	// IWonderConstruction
@@ -114,18 +119,18 @@ public class EconomyController implements IEconomyProgress{
 
 	@Override
 	public void processEvent(IEvent event, InputControlEnum input) {
-		Log.v("EconomyController.processEvent", "*********************************************************************");
-		Log.v("EconomyController.processEvent", "Possible events: " + event.getPrimaryEffect().getEventName() + " behavior: " + event.getPrimaryEffect().getBehavior() + ";" + event.getSecondaryEffect().getEventName() + " behavior: " + event.getSecondaryEffect().getBehavior());
+		LoggingUtils.log("EconomyController.processEvent", "*********************************************************************");
+		LoggingUtils.log("EconomyController.processEvent", "Possible events: " + event.getPrimaryEffect().getEventName() + " behavior: " + event.getPrimaryEffect().getBehavior() + ";" + event.getSecondaryEffect().getEventName() + " behavior: " + event.getSecondaryEffect().getBehavior());
 
 		switch(input){
 		case LEFT:
-			Log.v("EconomyController.processEvent", "Processing event: " + event.getPrimaryEffect().getEventName());
-			Log.v("EconomyController.processEvent", "Resource: " + event.getPrimaryEffect().getEventResources()[0].getResource() + " Quantity: " + event.getPrimaryEffect().getEventResources()[0].getQuantity());
+			LoggingUtils.log("EconomyController.processEvent", "Processing event: " + event.getPrimaryEffect().getEventName());
+			LoggingUtils.log("EconomyController.processEvent", "Resource: " + event.getPrimaryEffect().getEventResources()[0].getResource() + " Quantity: " + event.getPrimaryEffect().getEventResources()[0].getQuantity());
 			this.applyEvent(event.getPrimaryEffect());
 			break;
 		case RIGHT:
-			Log.v("EconomyController.processEvent", "Processing event: " + event.getSecondaryEffect().getEventName());
-			Log.v("EconomyController.processEvent", "Resource: " + event.getSecondaryEffect().getEventResources()[0].getResource() + " Quantity: " + event.getSecondaryEffect().getEventResources()[0].getQuantity());
+			LoggingUtils.log("EconomyController.processEvent", "Processing event: " + event.getSecondaryEffect().getEventName());
+			LoggingUtils.log("EconomyController.processEvent", "Resource: " + event.getSecondaryEffect().getEventResources()[0].getResource() + " Quantity: " + event.getSecondaryEffect().getEventResources()[0].getQuantity());
 			this.applyEvent(event.getSecondaryEffect());
 			break;
 		}
@@ -140,14 +145,16 @@ public class EconomyController implements IEconomyProgress{
 		this.wonder.increaseWoodStored(this.economyStatus.getWoodIncome());
 		this.wonder.updateWonderConstruction();
 
-		if(this.turnsToInvasion <= 0){
-			this.invasionEvent.rollAttributes(EventTypeEnum.ATTACK, this.getLevel(), -1);
-			this.resetInvasion();
-			Log.v("EconomyController.processEvent", "Processing invasion event: " + this.invasionEvent.getEventType());
-			this.applyEvent(this.invasionEvent);
-		} else {
-			this.turnsToInvasion--;
-			Log.v("EconomyController.processEvent", "Turns to invasion: " + this.turnsToInvasion);
+		if(this.invasionExists){
+			if(this.turnsToInvasion <= 0){
+				this.invasionEvent.rollAttributes(EventTypeEnum.ATTACK, this.getLevel(), -1);
+				this.resetInvasion();
+				LoggingUtils.log("EconomyController.processEvent", "Processing invasion event: " + this.invasionEvent.getEventType());
+				this.applyEvent(this.invasionEvent);
+			} else {
+				this.turnsToInvasion--;
+				LoggingUtils.log("EconomyController.processEvent", "Turns to invasion: " + this.turnsToInvasion);
+			}
 		}
 	}
 
@@ -170,13 +177,13 @@ public class EconomyController implements IEconomyProgress{
 			break;
 		}
 
-		Log.v("EconomyController.applyEvent", "Worker status");
-		Log.v("EconomyController.applyEvent", "Wood worker: " + this.getWoodWorkers());
-		Log.v("EconomyController.applyEvent", "Stone worker: " + this.getStoneWorkers());
-		Log.v("EconomyController.applyEvent", "Food worker: " + this.getFoodWorkers());
-		Log.v("EconomyController.applyEvent", "Builder: " + this.getBuilders());
-		Log.v("EconomyController.applyEvent", "Soldier: " + this.getSoldiers());
-		Log.v("EconomyController.applyEvent", "Coins: " + this.getCoins());
+		LoggingUtils.log("EconomyController.applyEvent", "Worker status");
+		LoggingUtils.log("EconomyController.applyEvent", "Wood worker: " + this.getWoodWorkers());
+		LoggingUtils.log("EconomyController.applyEvent", "Stone worker: " + this.getStoneWorkers());
+		LoggingUtils.log("EconomyController.applyEvent", "Food worker: " + this.getFoodWorkers());
+		LoggingUtils.log("EconomyController.applyEvent", "Builder: " + this.getBuilders());
+		LoggingUtils.log("EconomyController.applyEvent", "Soldier: " + this.getSoldiers());
+		LoggingUtils.log("EconomyController.applyEvent", "Coins: " + this.getCoins());
 	}
 
 	private void handleInvasionEvent(EventEffectBean eventEffect){
@@ -276,7 +283,7 @@ public class EconomyController implements IEconomyProgress{
 			}
 			break;
 		}
-		Log.v("EconomyController.handleResourceEvent", "Resource: " + eventEffect.getEventResources()[0].getResource() + " behavior: " + eventEffect.getBehavior() + " quantity: " + eventEffect.getEventResources()[0].getQuantity());
+		LoggingUtils.log("EconomyController.handleResourceEvent", "Resource: " + eventEffect.getEventResources()[0].getResource() + " behavior: " + eventEffect.getBehavior() + " quantity: " + eventEffect.getEventResources()[0].getQuantity());
 	}
 
 	private void handleRaid(EventEffectBean eventEffect){

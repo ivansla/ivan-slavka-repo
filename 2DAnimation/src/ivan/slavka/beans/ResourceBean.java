@@ -13,7 +13,7 @@ public class ResourceBean {
 
 	public ResourceBean(){
 		if(PRICE_ARRAY == null){
-			PRICE_ARRAY = new int[10];
+			PRICE_ARRAY = new int[20];
 			PRICE_ARRAY[EventSpriteEnum.WOOD.getCode()] = 2;
 			PRICE_ARRAY[EventSpriteEnum.FOOD.getCode()] = 1;
 			PRICE_ARRAY[EventSpriteEnum.STONE.getCode()] = 4;

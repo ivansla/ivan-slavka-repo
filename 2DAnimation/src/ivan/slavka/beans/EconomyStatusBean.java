@@ -1,7 +1,7 @@
 package ivan.slavka.beans;
 
 import ivan.slavka.interfaces.IWonderConstruction;
-import android.util.Log;
+import ivan.slavka.utils.LoggingUtils;
 
 public class EconomyStatusBean {
 
@@ -215,7 +215,7 @@ public class EconomyStatusBean {
 			this.foodStorage = 0;
 		}
 
-		Log.v("EconomyStatusBean.consumeFood", "Food Income: " + this.foodIncome + " Food Storage:" + this.foodStorage + " Food consumption: " + this.getFoodConsumtion());
+		LoggingUtils.log("EconomyStatusBean.consumeFood", "Food Income: " + this.foodIncome + " Food Storage:" + this.foodStorage + " Food consumption: " + this.getFoodConsumtion());
 
 		if(this.foodStorage <= 0){
 			this.turnsWithoutFood++;
@@ -228,7 +228,7 @@ public class EconomyStatusBean {
 					peoplePerished = this.getTotalPopulation() / 3;
 				}
 
-				Log.v("EconomyStatusBean.consumeFood", "peoplePerished: " + peoplePerished);
+				LoggingUtils.log("EconomyStatusBean.consumeFood", "peoplePerished: " + peoplePerished);
 				while(peoplePerished > 0){
 					int choice = peoplePerished % NUMBER_OF_WORKER_TYPES;
 					switch(choice){
@@ -277,7 +277,10 @@ public class EconomyStatusBean {
 	private void calculateResourceIncome(){
 		this.woodIncome = WOOD_MULTIPLICATOR * this.woodWorkers;
 		this.stoneIncome = STONE_MULTIPLICATOR * this.stoneWorkers;
-		Log.v("EconomyStatusBean.calculateResourceIncome", "Wood Income: " + this.woodIncome + " Stone Income: " + this.stoneIncome);
+
+		LoggingUtils.log("EconomyStatusBean.calculateResourceIncome", "Wood Income: " + this.woodIncome + " Stone Income: " + this.stoneIncome);
+
+		//LoggingUtils.log("EconomyStatusBean.calculateResourceIncome", "Wood Income: " + this.woodIncome + " Stone Income: " + this.stoneIncome);
 	}
 
 	public float getFoodStorage() {

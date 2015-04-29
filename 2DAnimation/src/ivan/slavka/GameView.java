@@ -29,6 +29,7 @@ import android.view.WindowManager;
 
 @SuppressLint("WrongCall")
 public class GameView extends AbstractGameView {
+
 	public final static long FPS = 30;
 	private final static int SPRITE_DELAY = 2000;
 	private final static int NUMBER_OF_SPRITES = 7;
