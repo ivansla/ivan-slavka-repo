@@ -1,16 +1,11 @@
 package ivan.slavka.beans;
 
+import ivan.slavka.constants.Constants;
 import ivan.slavka.interfaces.IWonderConstruction;
 import ivan.slavka.utils.LoggingUtils;
 
 public class EconomyStatusBean {
 
-	private static float WOOD_MULTIPLICATOR = 0.5f;
-	private static float STONE_MULTIPLICATOR = 0.25f;
-	private static float FOOD_MULTIPLICATOR = 0.7f;
-	private static float FOOD_CONSUMPTION = 0.2f;
-
-	private static int FOOD_SHORTAGE_TOLERANCE = 3;
 	private static int NUMBER_OF_WORKER_TYPES = 5;
 
 	private int turnsWithoutFood = 0;
@@ -200,7 +195,7 @@ public class EconomyStatusBean {
 
 	public float getFoodConsumtion(){
 		int numberOfPeople = this.getTotalPopulation();
-		return (numberOfPeople * FOOD_CONSUMPTION);
+		return (numberOfPeople * Constants.FOOD_CONSUMPTION);
 	}
 
 	private int getTotalPopulation(){
@@ -209,7 +204,7 @@ public class EconomyStatusBean {
 
 	private void consumeFood(){
 
-		this.foodIncome = (FOOD_MULTIPLICATOR * this.foodWorkers) - this.getFoodConsumtion();
+		this.foodIncome = (Constants.FOOD_MULTIPLICATOR * this.foodWorkers) - this.getFoodConsumtion();
 		this.foodStorage += this.foodIncome;
 		if(this.foodStorage < 0){
 			this.foodStorage = 0;
@@ -219,7 +214,7 @@ public class EconomyStatusBean {
 
 		if(this.foodStorage <= 0){
 			this.turnsWithoutFood++;
-			if(this.turnsWithoutFood >= FOOD_SHORTAGE_TOLERANCE){
+			if(this.turnsWithoutFood >= Constants.FOOD_SHORTAGE_TOLERANCE){
 				int peoplePerished = 0;
 
 				if(this.getTotalPopulation() <= 10){
@@ -275,8 +270,8 @@ public class EconomyStatusBean {
 	}
 
 	private void calculateResourceIncome(){
-		this.woodIncome = WOOD_MULTIPLICATOR * this.woodWorkers;
-		this.stoneIncome = STONE_MULTIPLICATOR * this.stoneWorkers;
+		this.woodIncome = Constants.WOOD_MULTIPLICATOR * this.woodWorkers;
+		this.stoneIncome = Constants.STONE_MULTIPLICATOR * this.stoneWorkers;
 
 		LoggingUtils.log("EconomyStatusBean.calculateResourceIncome", "Wood Income: " + this.woodIncome + " Stone Income: " + this.stoneIncome);
 

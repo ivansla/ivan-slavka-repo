@@ -22,10 +22,13 @@ public class EventBean implements IEvent{
 		this.eventEffects[1] = new EventEffectBean(economyController);
 	}
 
-	public void generateSpecialEvent(int level, int roll){
+	public boolean generateSpecialEvent(int level, int roll){
 		this.isSpecial = true;
-		this.eventEffects[0].rollAttributes(EventTypeEnum.SPECIAL_EVENT, level, roll);
-		this.eventEffects[1] = this.eventEffects[0];
+		boolean specialEventGenerationSuccessfull = this.eventEffects[0].rollAttributes(EventTypeEnum.SPECIAL_EVENT, level, roll);
+		if(specialEventGenerationSuccessfull){
+			this.eventEffects[1] = this.eventEffects[0];
+		}
+		return specialEventGenerationSuccessfull;
 	}
 
 	public void generateEvent(int level, EventTypeEnum eventType){

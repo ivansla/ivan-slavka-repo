@@ -30,6 +30,7 @@ public class EconomyController implements IEconomyProgress{
 	private int turnsToInvasion;
 	private boolean invasionExists;
 	private boolean isGameOver = false;
+	private boolean isVictory = false;
 
 	public EconomyController(){
 		this.economyStatus = new EconomyStatusBean(this);
@@ -144,6 +145,10 @@ public class EconomyController implements IEconomyProgress{
 		this.wonder.increaseStoneStored(this.economyStatus.getStoneIncome());
 		this.wonder.increaseWoodStored(this.economyStatus.getWoodIncome());
 		this.wonder.updateWonderConstruction();
+		if(this.wonder.getCompleted() >= 100){
+			this.isGameOver = true;
+			this.isVictory = true;
+		}
 
 		if(this.invasionExists){
 			if(this.turnsToInvasion <= 0){
@@ -289,7 +294,7 @@ public class EconomyController implements IEconomyProgress{
 	private void handleRaid(EventEffectBean eventEffect){
 		int roll = this.random.nextInt(10);
 		if(roll < 3){
-			switch(eventEffect.getSpecialEventName()){
+			switch(eventEffect.getEventName()){
 			case RAID_TOWN:
 				roll = this.random.nextInt(TOWN_LOSS_MAX);
 				break;
@@ -299,6 +304,10 @@ public class EconomyController implements IEconomyProgress{
 			}
 
 			for(ResourceBean resource : eventEffect.getEventResources()){
+				if(resource.getResource() == null){
+					continue;
+				}
+
 				switch(resource.getResource()){
 				case STONE:
 					this.wonder.increaseStoneStored(resource.getQuantity());
@@ -441,6 +450,7 @@ public class EconomyController implements IEconomyProgress{
 	@Override
 	public void restartGame() {
 		this.isGameOver = false;
+		this.isVictory = false;
 
 		this.economyStatus.restartEconomyStatus();
 		this.wonder.restartWonder();
@@ -449,5 +459,9 @@ public class EconomyController implements IEconomyProgress{
 	@Override
 	public boolean isGameOver() {
 		return this.isGameOver;
+	}
+
+	public boolean isVictory() {
+		return this.isVictory;
 	}
 }

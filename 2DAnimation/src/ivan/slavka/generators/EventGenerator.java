@@ -50,7 +50,10 @@ public class EventGenerator implements IEventGenerator{
 		} else {
 			int roll = this.randomizer.nextInt(100);
 			if(roll >= 95){ // special event
-				event.generateSpecialEvent(level, roll);
+				boolean success = event.generateSpecialEvent(level, roll);
+				if(!success){
+					event.generateEvent(level);
+				}
 			} else {
 				event.generateEvent(level);
 			}

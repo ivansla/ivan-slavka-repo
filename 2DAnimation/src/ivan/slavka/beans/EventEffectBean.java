@@ -28,8 +28,8 @@ public class EventEffectBean {
 
 	private AttributeBean[] specialEventAttributes = {
 			new AttributeBean(EventSpriteEnum.VERMIN, 20, 80, 1, EventSpriteEnum.FOOD),
-			new AttributeBean(EventSpriteEnum.PLAGUE, 20, 80, 5, EventSpriteEnum.ALL_WORKERS),
-			new AttributeBean(EventSpriteEnum.EARTHQUAKE, 10, 30, 5, EventSpriteEnum.CONSTRUCTION),
+			new AttributeBean(EventSpriteEnum.PLAGUE, 20, 80, 7, EventSpriteEnum.ALL_WORKERS),
+			new AttributeBean(EventSpriteEnum.EARTHQUAKE, 10, 30, 9, EventSpriteEnum.CONSTRUCTION),
 			new AttributeBean(EventSpriteEnum.BAD_ROCK, 20, 80, 5, EventSpriteEnum.STONE),
 			new AttributeBean(EventSpriteEnum.FIRE, 20, 80, 5, EventSpriteEnum.WOOD),
 			new AttributeBean(EventSpriteEnum.BABY_BOOM, 20, 50, 5, EventSpriteEnum.ALL_WORKERS),
