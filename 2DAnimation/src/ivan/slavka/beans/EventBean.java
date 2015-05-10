@@ -1,6 +1,7 @@
 package ivan.slavka.beans;
 
 import ivan.slavka.enums.EventTypeEnum;
+import ivan.slavka.generators.Randomizer;
 import ivan.slavka.interfaces.IEconomyProgress;
 import ivan.slavka.interfaces.IEvent;
 
@@ -10,7 +11,7 @@ public class EventBean implements IEvent{
 
 	private boolean isReleased = false;
 	private boolean isSpecial = false;
-	private Random random = new Random();
+	private Random random = Randomizer.getInstance();
 	private EventEffectBean[] eventEffects;
 
 	public EventBean(){}

@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class EventSimulator {
 
-	private static int ITERATIONS = 100;
+	private static int ITERATIONS = 1000;
 	/**
 	 * @param args
 	 */
@@ -30,6 +30,8 @@ public class EventSimulator {
 		int minimumTurns = 0;
 		int maximumTurns = 0;
 		long totalTurns = 0L;
+		long maximumGlobalTime = 0;
+		long minimumGlobalTime = 0;
 
 		long startTime = System.currentTimeMillis();
 
@@ -37,8 +39,28 @@ public class EventSimulator {
 			controller.restartGame();
 
 			int processedTurns = 0;
+			int intervalProcessedTurns = 0;
+			long minimumTimeToProcess = 0;
+			long maximumTimeToProcess = 0;
+			long processedTurnStartTime = System.currentTimeMillis();
+
 			while(!controller.isGameOver()){
 				processedTurns++;
+				intervalProcessedTurns++;
+				if(intervalProcessedTurns >= 1000){
+					long timeToProcess = (System.currentTimeMillis() - processedTurnStartTime);
+					if(minimumTimeToProcess == 0 || minimumTimeToProcess > timeToProcess){
+						minimumTimeToProcess = timeToProcess;
+					}
+
+					if(maximumTimeToProcess == 0 || maximumTimeToProcess < timeToProcess){
+						maximumTimeToProcess = timeToProcess;
+					}
+
+					processedTurnStartTime = System.currentTimeMillis();
+					intervalProcessedTurns = 0;
+				}
+
 				IEvent event = eventGenerator.generateEvent(controller.getLevel());
 
 				if(controller.getFoodIncome() < 2){
@@ -67,9 +89,21 @@ public class EventSimulator {
 
 			totalTurns += processedTurns;
 
+			System.out.println("Maximum time to process 1000 turns: " + maximumTimeToProcess);
+			System.out.println("Minimum time to process 1000 turns: " + minimumTimeToProcess);
 			System.out.println("Simulation ended after: " + processedTurns + " turns; isVictory: " + controller.isVictory());
+
+			if((minimumGlobalTime == 0 || minimumGlobalTime > minimumTimeToProcess) && minimumTimeToProcess != 0){
+				minimumGlobalTime = minimumTimeToProcess;
+			}
+
+			if((maximumGlobalTime == 0 || maximumGlobalTime < maximumTimeToProcess) && maximumTimeToProcess != 0){
+				maximumGlobalTime = maximumTimeToProcess;
+			}
 		}
 
+		System.out.println("Maximum Global time to process 1000 turns: " + maximumGlobalTime);
+		System.out.println("Minimum Global time to process 1000 turns: " + minimumGlobalTime);
 		System.out.println("Time to process: " + (System.currentTimeMillis() - startTime));
 		System.out.println("Win/Loss ratio: " + (wins/losses));
 		System.out.println("Maximum/Minimum turns: " + maximumTurns + "/" + minimumTurns);

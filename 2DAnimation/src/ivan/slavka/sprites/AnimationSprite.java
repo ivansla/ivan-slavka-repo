@@ -1,5 +1,6 @@
 package ivan.slavka.sprites;
 
+import ivan.slavka.constants.Constants;
 import ivan.slavka.enums.GeneralSpriteEnum;
 import ivan.slavka.interfaces.IEconomyProgress;
 import android.graphics.Bitmap;
@@ -82,9 +83,9 @@ public class AnimationSprite {
 			float woodRequirement = this.economyController.getWoodBuilding() + this.economyController.getWoodMaintenace();
 
 			if(this.economyController.getWoodStored() <= 0){
-				if(this.economyController.getWoodIncome() < woodRequirement){ // Income is lower than necessity
-					return 0;
-				}
+				//if(this.economyController.getWoodIncome() < woodRequirement){ // Income is lower than necessity
+				return 0;
+				//}
 			} else {
 				if(woodRequirement <= 0){
 					return 2;
@@ -104,9 +105,9 @@ public class AnimationSprite {
 			float stoneRequirement = this.economyController.getStoneBuilding() + this.economyController.getStoneMaintenace();
 
 			if(this.economyController.getStoneStored() <= 0){
-				if(this.economyController.getStoneIncome() < stoneRequirement){ // Income is lower than necessity
-					return 0;
-				}
+				//if(this.economyController.getStoneIncome() < stoneRequirement){ // Income is lower than necessity
+				return 0;
+				//}
 			} else {
 				if(stoneRequirement <= 0){
 					return 2;
@@ -117,6 +118,22 @@ public class AnimationSprite {
 				}
 
 				if(	this.economyController.getStoneStored() >= stoneRequirement * 5){ // Income is bigger than necessity and resource stored is more than the necessity
+					return 3;
+				}
+			}
+			return 2; // Balanced
+
+		case GOLD_WAREHOUSE:
+			//float stoneRequirement = this.economyController.getStoneBuilding() + this.economyController.getStoneMaintenace();
+
+			if(this.economyController.getCoins() <= 0){
+				return 0;
+			} else {
+				if(this.economyController.getCoins() < Constants.SOLDIER_PRICE * 2){ // Income is lower than necessity
+					return 1;
+				}
+
+				if(	this.economyController.getCoins() >= Constants.SOLDIER_PRICE * 10){ // Income is bigger than necessity and resource stored is more than the necessity
 					return 3;
 				}
 			}

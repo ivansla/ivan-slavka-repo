@@ -1,9 +1,12 @@
 package ivan.slavka.beans;
 
+import ivan.slavka.constants.Constants;
+import ivan.slavka.constants.Constants.AttributeBean;
 import ivan.slavka.enums.EventBehaviorEnum;
 import ivan.slavka.enums.EventSpriteEnum;
 import ivan.slavka.enums.EventTypeEnum;
 import ivan.slavka.enums.SpecialEventEnum;
+import ivan.slavka.generators.Randomizer;
 import ivan.slavka.interfaces.IEconomyProgress;
 
 import java.util.Random;
@@ -14,8 +17,8 @@ public class EventEffectBean {
 	private static int NUMBER_OF_RESOURCES = 4;
 	private ResourceBean[] resourceArray = new ResourceBean[NUMBER_OF_RESOURCES];
 
-	private AttributeBean[] possibleAttributes = new AttributeBean[7];
-
+	private AttributeBean[] possibleAttributes = new AttributeBean[10];
+	/*
 	private AttributeBean[] attributes = {
 			new AttributeBean(-10, -6, 5),
 			new AttributeBean(-5, -1, 2),
@@ -49,8 +52,8 @@ public class EventEffectBean {
 			new AttributeBean(120, 150, 6),
 			new AttributeBean(160, 200, 8)
 	};
-
-	private Random random = new Random();
+	 */
+	private Random random = Randomizer.getInstance();
 
 	private EventBehaviorEnum behavior;
 	private SpecialEventEnum specialEventName;
@@ -146,7 +149,7 @@ public class EventEffectBean {
 			}
 			break;
 		case SPECIAL_EVENT:
-			filterSuccessfull = this.filterPossibleAttributes(this.specialEventAttributes, level);
+			filterSuccessfull = this.filterPossibleAttributes(Constants.SPECIAL_EVENT_ATTRIBUTES, level);
 			if(filterSuccessfull){
 				attr = this.possibleAttributes[this.random.nextInt(this.lastPossibleAttributeIndex)];
 				quantity = this.random.nextInt(attr.maxValue - attr.minValue + 1) + attr.minValue;
@@ -157,14 +160,14 @@ public class EventEffectBean {
 			}
 			break;
 		case RAID:
-			filterSuccessfull = this.filterPossibleAttributes(this.raidEventAttributes, level);
+			filterSuccessfull = this.filterPossibleAttributes(Constants.RAID_EVENT_ATTRIBUTES, level);
 			if(filterSuccessfull){
 				attr = this.possibleAttributes[this.random.nextInt(this.lastPossibleAttributeIndex)];
 				quantity = this.random.nextInt(attr.maxValue - attr.minValue + 1) + attr.minValue;
 				this.behavior = EventBehaviorEnum.ADDITION;
 				this.resourceArray[0].activateResource(attr.resource, quantity);
 
-				attr = this.findComplement(attr, this.raidEventAttributes);
+				attr = this.findComplement(attr, Constants.RAID_EVENT_ATTRIBUTES);
 				quantity = this.random.nextInt(attr.maxValue - attr.minValue + 1) + attr.minValue;
 				this.resourceArray[1].activateResource(attr.resource, quantity);
 				isRollSuccessfull = true;
@@ -172,7 +175,7 @@ public class EventEffectBean {
 			}
 			break;
 		case ATTACK:
-			filterSuccessfull = this.filterPossibleAttributes(this.invasionAttributes, level);
+			filterSuccessfull = this.filterPossibleAttributes(Constants.INVASION_ATTRIBUTES, level);
 			if(filterSuccessfull){
 				attr = this.possibleAttributes[this.random.nextInt(this.lastPossibleAttributeIndex)];
 				quantity = this.random.nextInt(attr.maxValue - attr.minValue + 1) + attr.minValue;
@@ -198,7 +201,7 @@ public class EventEffectBean {
 	private boolean filterPossibleAttributes(int level){
 		boolean isFilterSuccessfull = false;
 		this.resetPossibleAttributes();
-		for(AttributeBean attr : this.attributes){
+		for(AttributeBean attr : Constants.ATTRIBUTES){
 			if(attr.qLvl <= level && attr.qLvl >= (level * 0.5)){
 				this.possibleAttributes[this.lastPossibleAttributeIndex] = attr;
 				this.lastPossibleAttributeIndex++;
@@ -229,6 +232,7 @@ public class EventEffectBean {
 		}
 	}
 
+	/*
 	private class AttributeBean{
 		public final EventSpriteEnum resource;
 		public final int minValue;
@@ -251,7 +255,7 @@ public class EventEffectBean {
 			this.resource = resourceEnum;
 		}
 	}
-
+	 */
 	public SpecialEventEnum getSpecialEventName() {
 		return this.specialEventName;
 	}

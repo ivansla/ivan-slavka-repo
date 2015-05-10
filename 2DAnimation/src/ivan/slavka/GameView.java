@@ -131,6 +131,10 @@ public class GameView extends AbstractGameView {
 		this.generalSprites[8].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.QUARRY_CAMP), GeneralSpriteEnum.QUARRY_CAMP);
 		this.generalSprites[8].setCoordinates(350, 350);
 
+		this.generalSprites[9] = new AnimationSprite(this.economyProgressController, 64);
+		this.generalSprites[9].prepareSprite(this.spriteManager.getGeneralSprite(GeneralSpriteEnum.GOLD_WAREHOUSE), GeneralSpriteEnum.GOLD_WAREHOUSE);
+		this.generalSprites[9].setCoordinates(100, 400);
+
 		this.worldBitmap = this.spriteManager.getGeneralSprite(GeneralSpriteEnum.WORLD);
 	}
 

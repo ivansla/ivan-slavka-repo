@@ -9,6 +9,7 @@ import ivan.slavka.enums.EventBehaviorEnum;
 import ivan.slavka.enums.EventTypeEnum;
 import ivan.slavka.enums.InputControlEnum;
 import ivan.slavka.generators.CombatSimulator;
+import ivan.slavka.generators.Randomizer;
 import ivan.slavka.interfaces.IEconomyProgress;
 import ivan.slavka.interfaces.IEvent;
 import ivan.slavka.utils.LoggingUtils;
@@ -23,7 +24,7 @@ public class EconomyController implements IEconomyProgress{
 	private EconomyStatusBean economyStatus;
 	private WonderBean wonder;
 	private CombatSimulator combatSimulator;
-	private Random random = new Random();
+	private Random random = Randomizer.getInstance();
 
 	private EventEffectBean invasionEvent = new EventEffectBean();
 
