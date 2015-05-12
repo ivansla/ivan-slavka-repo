@@ -59,7 +59,7 @@ public class SpriteManager {
 		if(!isSpriteAvailable){
 			sprite = new Sprite();
 			this.spritePool.add(sprite);
-			sprite.prepareSprite(this.gameView, this.generalSpriteBitmapMap.get(GeneralSpriteEnum.BARQUE));
+			sprite.prepareSprite(this.gameView, this.generalSpriteBitmapMap.get(GeneralSpriteEnum.BARQUE), this.generalSpriteBitmapMap.get(GeneralSpriteEnum.BARQUE_COVERED));
 		}
 
 		sprite.setEvent(this.eventGenerator.generateEvent(this.economyController.getLevel()));
@@ -96,6 +96,7 @@ public class SpriteManager {
 		this.generalSpriteBitmapMap.put(GeneralSpriteEnum.STONE_WAREHOUSE, BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.stone_warehouse_strip));
 		this.generalSpriteBitmapMap.put(GeneralSpriteEnum.WOOD_WAREHOUSE, BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.wood_warehouse_strip));
 		this.generalSpriteBitmapMap.put(GeneralSpriteEnum.BARQUE, BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.barque));
+		this.generalSpriteBitmapMap.put(GeneralSpriteEnum.BARQUE_COVERED, BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.barque_covered));
 		this.generalSpriteBitmapMap.put(GeneralSpriteEnum.WONDER, BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.wonder_strip));
 		this.generalSpriteBitmapMap.put(GeneralSpriteEnum.QUARRY_CAMP, BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.stone_camp_strip));
 		this.generalSpriteBitmapMap.put(GeneralSpriteEnum.FARM_CAMP, BitmapFactory.decodeResource(this.gameView.getResources(), R.drawable.farmer_camp_strip));

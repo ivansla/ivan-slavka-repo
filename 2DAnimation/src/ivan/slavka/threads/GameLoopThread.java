@@ -3,19 +3,20 @@ package ivan.slavka.threads;
 import ivan.slavka.abstracts.AbstractGameView;
 import android.annotation.SuppressLint;
 import android.graphics.Canvas;
+import android.view.SurfaceHolder;
 
 @SuppressLint("WrongCall")
 public class GameLoopThread extends Thread {
 
-	//private static GameLoopThread INSTANCE = null;
+	private static long FPS = 30;
 
-	private long fps;// = 30;
 	private AbstractGameView view;
+	private SurfaceHolder surfaceHolder;
 	private boolean running = false;
 
-	public GameLoopThread(AbstractGameView view, long fps) {
+	public GameLoopThread(AbstractGameView view, SurfaceHolder surfaceHolder) {
 		this.view = view;
-		this.fps = fps;
+		this.surfaceHolder = surfaceHolder;
 	}
 
 	public void setRunning(boolean run) {
@@ -24,30 +25,35 @@ public class GameLoopThread extends Thread {
 
 	@Override
 	public void run() {
-		long ticksPS = 1000 / this.fps;
 		long startTime;
 		long sleepTime;
+		long timePassed = 0;
 		while (this.running) {
 			Canvas c = null;
+			//limit frame rate to max 60fps
 			startTime = System.currentTimeMillis();
+			sleepTime = startTime - timePassed;
+			if (sleepTime < 16) {
+				try {
+					Thread.sleep(16 - sleepTime);
+				}
+				catch(InterruptedException e) {
+
+				}
+			}
+			timePassed = System.currentTimeMillis();
+
 			try {
-				c = this.view.getHolder().lockCanvas();
-				synchronized (this.view.getHolder()) {
+				c = this.surfaceHolder.lockCanvas();
+				synchronized (this.surfaceHolder) {
 					this.view.updateGame();
 					this.view.onDraw(c);
 				}
 			} finally {
 				if (c != null) {
-					this.view.getHolder().unlockCanvasAndPost(c);
+					this.surfaceHolder.unlockCanvasAndPost(c);
 				}
 			}
-			sleepTime = ticksPS-(System.currentTimeMillis() - startTime);
-			try {
-				if (sleepTime > 0)
-					sleep(sleepTime);
-				else
-					sleep(10);
-			} catch (Exception e) {}
 		}
 	}
 }

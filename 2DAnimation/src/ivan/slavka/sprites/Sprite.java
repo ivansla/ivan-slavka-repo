@@ -74,7 +74,7 @@ public class Sprite {
 
 	public Sprite() {
 
-		this.bitmaps = new Bitmap[3];
+		this.bitmaps = new Bitmap[4];
 
 		this.alpha = 255;
 		this.isReleased = false;
@@ -100,7 +100,7 @@ public class Sprite {
 		this.textPaint.setStyle(Paint.Style.FILL);
 	}
 
-	public void prepareSprite(GameView gameView, Bitmap barqueBitmap){
+	public void prepareSprite(GameView gameView, Bitmap barqueBitmap, Bitmap barqueCoveredBitmap){
 		if(this.gameView == null){
 
 			this.gameView = gameView;
@@ -111,6 +111,7 @@ public class Sprite {
 
 			//this.position = new PointF((this.drawingRect.exactCenterX() - (WIDTH_SIZE * 0.5f)), 0f);
 			this.bitmaps[2] = barqueBitmap;
+			this.bitmaps[3] = barqueCoveredBitmap;
 		}
 	}
 
@@ -247,12 +248,16 @@ public class Sprite {
 	public void onDraw(Canvas canvas) {
 		this.update();
 		//canvas.drawRect(this.positionX, this.positionY, this.positionX + WIDTH_SIZE, this.positionY + HEIGHT_SIZE, this.drawPaint);
-		canvas.drawBitmap(this.bitmaps[2], this.positionX, this.positionY, null);
-		if(this.event.isSpecialEvent()){
-			canvas.drawBitmap(this.bitmaps[0], this.positionX, this.positionY, null);
-		} else {
-			canvas.drawBitmap(this.bitmaps[0], this.positionX, this.positionY, null);
-			canvas.drawBitmap(this.bitmaps[1], (this.positionX + (WIDTH_SIZE * 0.5f)), this.positionY, null);
+		canvas.drawBitmap(this.bitmaps[3], this.positionX, this.positionY, null);
+
+		if((this.isLowestSprite && !this.isPerformingAnimation) || ((this.isMoved || this.spriteActivated) && this.isPerformingAnimation)){
+			canvas.drawBitmap(this.bitmaps[2], this.positionX, this.positionY, null);
+			if(this.event.isSpecialEvent()){
+				canvas.drawBitmap(this.bitmaps[0], this.positionX, this.positionY + 10, null);
+			} else {
+				canvas.drawBitmap(this.bitmaps[0], this.positionX, this.positionY + 10, null);
+				canvas.drawBitmap(this.bitmaps[1], (this.positionX + (WIDTH_SIZE * 0.5f)), this.positionY + 10, null);
+			}
 		}
 	}
 

@@ -12,6 +12,8 @@ public class AnimationSprite {
 	private static int BASIC_SIZE = 64;
 	private static float BASE_POPULATION = 100f;
 
+	private static int MINIMUM_WAREHOUSE = 10;
+
 	private int size;
 	private Bitmap bitmap;
 	private float x;
@@ -87,15 +89,17 @@ public class AnimationSprite {
 				return 0;
 				//}
 			} else {
-				if(woodRequirement <= 0){
+
+				/*if(woodRequirement <= 0){
 					return 2;
 				}
-
-				if(this.economyController.getWoodStored() < woodRequirement * 2){ // Income is lower than necessity
+				 */
+				if((woodRequirement < MINIMUM_WAREHOUSE && this.economyController.getWoodStored() <= MINIMUM_WAREHOUSE) ||
+						(woodRequirement >= MINIMUM_WAREHOUSE && this.economyController.getWoodStored() < woodRequirement * 2)){ // Income is lower than necessity
 					return 1;
 				}
 
-				if(this.economyController.getWoodStored() >= woodRequirement * 5){ // Income is bigger than necessity and resource stored is more than the necessity
+				if(woodRequirement >= MINIMUM_WAREHOUSE && this.economyController.getWoodStored() >= woodRequirement * 5){ // Income is bigger than necessity and resource stored is more than the necessity
 					return 3;
 				}
 			}
@@ -109,15 +113,13 @@ public class AnimationSprite {
 				return 0;
 				//}
 			} else {
-				if(stoneRequirement <= 0){
-					return 2;
-				}
 
-				if(this.economyController.getStoneStored() < stoneRequirement * 2){ // Income is lower than necessity
+				if((stoneRequirement < MINIMUM_WAREHOUSE && this.economyController.getStoneStored() <= MINIMUM_WAREHOUSE) ||
+						(stoneRequirement >= MINIMUM_WAREHOUSE && this.economyController.getStoneStored() < stoneRequirement * 2)){ // Income is lower than necessity
 					return 1;
 				}
 
-				if(	this.economyController.getStoneStored() >= stoneRequirement * 5){ // Income is bigger than necessity and resource stored is more than the necessity
+				if(stoneRequirement >= MINIMUM_WAREHOUSE &&	this.economyController.getStoneStored() >= stoneRequirement * 5){ // Income is bigger than necessity and resource stored is more than the necessity
 					return 3;
 				}
 			}

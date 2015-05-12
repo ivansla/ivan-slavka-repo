@@ -121,6 +121,10 @@ public class EconomyController implements IEconomyProgress{
 
 	@Override
 	public void processEvent(IEvent event, InputControlEnum input) {
+
+		this.wonder.increaseStoneStored(this.economyStatus.getStoneIncome());
+		this.wonder.increaseWoodStored(this.economyStatus.getWoodIncome());
+
 		LoggingUtils.log("EconomyController.processEvent", "*********************************************************************");
 		LoggingUtils.log("EconomyController.processEvent", "Possible events: " + event.getPrimaryEffect().getEventName() + " behavior: " + event.getPrimaryEffect().getBehavior() + ";" + event.getSecondaryEffect().getEventName() + " behavior: " + event.getSecondaryEffect().getBehavior());
 
@@ -143,8 +147,6 @@ public class EconomyController implements IEconomyProgress{
 			return;
 		}
 
-		this.wonder.increaseStoneStored(this.economyStatus.getStoneIncome());
-		this.wonder.increaseWoodStored(this.economyStatus.getWoodIncome());
 		this.wonder.updateWonderConstruction();
 		if(this.wonder.getCompleted() >= 100){
 			this.isGameOver = true;
@@ -375,10 +377,10 @@ public class EconomyController implements IEconomyProgress{
 		int difference = 0;
 		switch(resource.getResource()){
 		case WOOD:
-			difference = this.wonder.increaseWoodStored(resource.getQuantity());
+			difference = this.wonder.increaseWoodStored((-1) * resource.getQuantity());
 			break;
 		case STONE:
-			difference = this.wonder.increaseStoneStored(resource.getQuantity());
+			difference = this.wonder.increaseStoneStored((-1) * resource.getQuantity());
 			break;
 		}
 

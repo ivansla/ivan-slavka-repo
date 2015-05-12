@@ -34,7 +34,9 @@ public class StartGameView extends AbstractGameView{
 	public void onDraw(Canvas canvas) {
 		//canvas.drawColor(Color.BLACK);
 		//Log.v("StartGameView", "onDraw");
-		canvas.drawText("Start Game", 100, 300, this.textPaint);
+		if(canvas != null){
+			canvas.drawText("Start Game", 100, 300, this.textPaint);
+		}
 	}
 
 	@Override

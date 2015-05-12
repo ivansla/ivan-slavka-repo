@@ -220,7 +220,7 @@ public class EconomyStatusBean {
 				if(this.getTotalPopulation() <= 10){
 					this.isCivilizationDead = true;
 				} else {
-					peoplePerished = this.getTotalPopulation() / 3;
+					peoplePerished = this.getTotalPopulation() / 2;
 				}
 
 				LoggingUtils.log("EconomyStatusBean.consumeFood", "peoplePerished: " + peoplePerished);

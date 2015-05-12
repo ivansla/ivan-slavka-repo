@@ -265,7 +265,6 @@ public class GameView extends AbstractGameView {
 			//this.wonderSprite.onDraw(canvas);
 
 			for(Sprite s : this.activeSpriteLinkedList){
-
 				if(s != null){
 					s.onDraw(canvas);
 				}
