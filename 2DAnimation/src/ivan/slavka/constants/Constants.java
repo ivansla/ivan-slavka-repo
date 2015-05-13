@@ -25,11 +25,13 @@ public class Constants {
 	public static float FOOD_MULTIPLICATOR = 0.7f;
 	public static float FOOD_CONSUMPTION = 0.2f;
 	public static int FOOD_SHORTAGE_TOLERANCE = 3;
+	public static int SOLDIER_WAGE_TOLERANCE = 3;
 
 	// ResourceBean
-	public static int WOOD_PRICE = 2;
+	public static int WOOD_PRICE = 4;
 	public static int FOOD_PRICE = 1;
-	public static int STONE_PRICE = 4;
+	public static int STONE_PRICE = 8;
+	public static int SOLDIER_WAGE = 1;
 	public static int SOLDIER_PRICE = 7;
 
 	// WonderBean
@@ -41,6 +43,14 @@ public class Constants {
 
 	public static float RESOURCE_IMPORTANCE_QUOTIENT = 0.5f;
 	public static float MAINTENANCE_QUOTIENT = 0.2f;
+
+	// Invasion Event
+	public static int EXECUTION_MAX = 80;
+	public static int EXECUTION_MIN = 30;
+	public static int ENSLAVE_MAX = 50;
+	public static int ENSLAVE_MIN = 20;
+	public static int RANSACK_MAX = 50;
+	public static int RANSACK_MIN = 30;
 
 	public final static AttributeBean[] ATTRIBUTES = {
 		new AttributeBean(-10, -6, 5),

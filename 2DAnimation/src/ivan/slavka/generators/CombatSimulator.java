@@ -5,6 +5,7 @@ import ivan.slavka.beans.SoldierBean;
 import ivan.slavka.constants.Constants;
 import ivan.slavka.enums.CombatVictoryEnum;
 import ivan.slavka.interfaces.IEconomyProgress;
+import ivan.slavka.utils.LoggingUtils;
 
 import java.util.Random;
 
@@ -40,6 +41,9 @@ public class CombatSimulator {
 	public CombatVictoryEnum performCombat(int numberOfEnemies){
 		this.battleFinished = false;
 		this.initArmies(numberOfEnemies);
+
+		LoggingUtils.log(CombatSimulator.class, "performCombat", "Player Army: " + this.playerArmy.numberOfLiveSoldiers());
+		LoggingUtils.log(CombatSimulator.class, "performCombat", "Enemy Army: " + this.computerArmy.numberOfLiveSoldiers());
 
 		int currentTurn = 0;
 		while(currentTurn < Constants.DEFAULT_NUMBER_OF_TURNS && !this.battleFinished){

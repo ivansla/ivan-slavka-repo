@@ -9,6 +9,7 @@ public class EconomyStatusBean {
 	private static int NUMBER_OF_WORKER_TYPES = 5;
 
 	private int turnsWithoutFood = 0;
+	private int turnsWithoutWage = 0;
 
 	private boolean isCivilizationDead = false;
 
@@ -148,7 +149,7 @@ public class EconomyStatusBean {
 				this.coins += difference;
 				return difference;
 			} else {
-				this.coins -= coins;
+				this.coins += coins;
 			}
 		} else {
 			this.coins += coins;
@@ -190,6 +191,7 @@ public class EconomyStatusBean {
 
 	public void updateEconomyStatus(){
 		this.calculateResourceIncome();
+		this.maintainArmy();
 		this.consumeFood();
 	}
 
@@ -200,6 +202,25 @@ public class EconomyStatusBean {
 
 	private int getTotalPopulation(){
 		return this.foodWorkers + this.woodWorkers + this.stoneWorkers + this.builders + this.soldiers;
+	}
+
+	private void maintainArmy(){
+		int totalSoldierWage = this.soldiers * Constants.SOLDIER_WAGE;
+		if(this.coins >= totalSoldierWage){
+			this.increaseCoinsBy(-totalSoldierWage);
+			LoggingUtils.log(EconomyStatusBean.class, "maintainArmy", "Paying soldiers: " + totalSoldierWage);
+			this.turnsWithoutWage = 0;
+		} else {
+			this.turnsWithoutWage++;
+			if(this.turnsWithoutWage > Constants.SOLDIER_WAGE_TOLERANCE){
+				int numberOfMaintainedSoldiers = (int) (this.coins / Constants.SOLDIER_WAGE);
+				LoggingUtils.log(EconomyStatusBean.class, "maintainArmy", "Paying soldiers: " + (-numberOfMaintainedSoldiers * Constants.SOLDIER_WAGE));
+				this.increaseCoinsBy((-numberOfMaintainedSoldiers * Constants.SOLDIER_WAGE));
+				int numberOfDeserters = this.soldiers - numberOfMaintainedSoldiers;
+				this.increaseSoldiersBy(-numberOfDeserters);
+				LoggingUtils.log(EconomyStatusBean.class, "maintainArmy", "soldiers deserted: " + numberOfDeserters);
+			}
+		}
 	}
 
 	private void consumeFood(){
@@ -214,7 +235,7 @@ public class EconomyStatusBean {
 
 		if(this.foodStorage <= 0){
 			this.turnsWithoutFood++;
-			if(this.turnsWithoutFood >= Constants.FOOD_SHORTAGE_TOLERANCE){
+			if(this.turnsWithoutFood > Constants.FOOD_SHORTAGE_TOLERANCE){
 				int peoplePerished = 0;
 
 				if(this.getTotalPopulation() <= 10){
