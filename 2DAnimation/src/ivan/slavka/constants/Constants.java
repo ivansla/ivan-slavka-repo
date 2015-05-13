@@ -17,6 +17,9 @@ public class Constants {
 	public static int DEFAULT_NUMBER_OF_TURNS = 20;
 
 	// EconomyStatusBean
+	public static int STARTING_FOOD_AMOUNT = 15;
+	public static float FAMINE_PERISH = 0.3f;
+
 	public static float WOOD_MULTIPLICATOR = 0.5f;
 	public static float STONE_MULTIPLICATOR = 0.25f;
 	public static float FOOD_MULTIPLICATOR = 0.7f;
@@ -30,9 +33,12 @@ public class Constants {
 	public static int SOLDIER_PRICE = 7;
 
 	// WonderBean
-	public static int WOOD_NEEDED = 1000;
-	public static int STONE_NEEDED = 500;
-	public static float CONSTRUCTION_MULTIPLICATOR = 0.1f;
+	public static float BUILDER_WOOD_USAGE = 1f;
+	public static float BUILDER_STONE_USAGE = 0.5f;
+	public static int TURNS_NEEDED_FOR_BUILDER = 10000;
+	public static float CONSTRUCTION_MULTIPLICATOR = 1f / TURNS_NEEDED_FOR_BUILDER;
+	public static float BASE_MAINTENANCE_QUOTIENT = 0.1f;
+
 	public static float RESOURCE_IMPORTANCE_QUOTIENT = 0.5f;
 	public static float MAINTENANCE_QUOTIENT = 0.2f;
 

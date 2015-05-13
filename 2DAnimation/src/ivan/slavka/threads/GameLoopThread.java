@@ -46,8 +46,10 @@ public class GameLoopThread extends Thread {
 			try {
 				c = this.surfaceHolder.lockCanvas();
 				synchronized (this.surfaceHolder) {
-					this.view.updateGame();
-					this.view.onDraw(c);
+					if(c != null){
+						this.view.updateGame();
+						this.view.onDraw(c);
+					}
 				}
 			} finally {
 				if (c != null) {

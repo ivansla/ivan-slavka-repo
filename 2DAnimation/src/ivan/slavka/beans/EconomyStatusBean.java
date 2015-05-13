@@ -13,7 +13,7 @@ public class EconomyStatusBean {
 	private boolean isCivilizationDead = false;
 
 	private float coins = 0f;
-	private volatile float foodStorage = 10;
+	private volatile float foodStorage = Constants.STARTING_FOOD_AMOUNT;
 	private float woodIncome;
 	private int woodWorkers = 0;
 	private float stoneIncome;
@@ -220,7 +220,7 @@ public class EconomyStatusBean {
 				if(this.getTotalPopulation() <= 10){
 					this.isCivilizationDead = true;
 				} else {
-					peoplePerished = this.getTotalPopulation() / 2;
+					peoplePerished =(int) (this.getTotalPopulation() * Constants.FAMINE_PERISH);
 				}
 
 				LoggingUtils.log("EconomyStatusBean.consumeFood", "peoplePerished: " + peoplePerished);
@@ -310,7 +310,7 @@ public class EconomyStatusBean {
 		this.soldiers = 0;
 		this.coins = 0;
 		this.builders = 0;
-		this.foodStorage = 10;
+		this.foodStorage = Constants.STARTING_FOOD_AMOUNT;
 		this.turnsWithoutFood = 0;
 		this.isCivilizationDead = false;
 	}

@@ -174,7 +174,7 @@ public class AnimationSprite {
 		return 0;
 	}
 
-	private int calculateCampSiteTransition(int peopleInCamp, int totalPeople){
+	private int calculateCampSiteTransition(float peopleInCamp, float totalPeople){
 		float percentage = 0f;
 		if(totalPeople <= BASE_POPULATION){
 			percentage = peopleInCamp / BASE_POPULATION;
