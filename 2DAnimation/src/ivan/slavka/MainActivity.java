@@ -1,8 +1,6 @@
 package ivan.slavka;
 
-import ivan.slavka.beans.WonderBean;
 import ivan.slavka.interfaces.IViewSwitcher;
-import ivan.slavka.utils.LoggingUtils;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +16,7 @@ public class MainActivity extends Activity implements IViewSwitcher{
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-		LoggingUtils.addIgnoreClass(WonderBean.class);
+		//LoggingUtils.addIgnoreClass(WonderBean.class);
 
 		this.setContentView(new StartGameView(this, this));
 	}

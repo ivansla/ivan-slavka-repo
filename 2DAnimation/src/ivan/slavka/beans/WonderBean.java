@@ -10,9 +10,9 @@ public class WonderBean {
 	private static float MAINTENANCE_WOOD_REQUIRED_BASE = Constants.BUILDER_WOOD_USAGE * Constants.TURNS_NEEDED_FOR_BUILDER * Constants.BASE_MAINTENANCE_QUOTIENT;
 	private static float MAINTENANCE_STONE_REQUIRED_BASE = Constants.BUILDER_STONE_USAGE * Constants.TURNS_NEEDED_FOR_BUILDER * Constants.BASE_MAINTENANCE_QUOTIENT;
 
-	private float completed = 0f;
-	private float woodStored = 0f;
-	private float stoneStored = 0f;
+	private volatile float completed = 0f;
+	private volatile float woodStored = 0f;
+	private volatile float stoneStored = 0f;
 	private float woodRemaining = Constants.BUILDER_WOOD_USAGE * Constants.TURNS_NEEDED_FOR_BUILDER;
 	private float stoneRemaining = Constants.BUILDER_STONE_USAGE * Constants.TURNS_NEEDED_FOR_BUILDER;
 
@@ -71,7 +71,7 @@ public class WonderBean {
 		if(wood < 0){
 			if((wood * (-1)) > this.woodStored){
 				int difference = (int) wood + (int) this.woodStored;
-				this.woodStored = 0;
+				this.woodStored += (wood - difference);
 				this.woodRemaining -= (wood - difference);
 				return difference;
 			} else {
@@ -94,7 +94,7 @@ public class WonderBean {
 		if(stone < 0){
 			if((stone * (-1)) > this.stoneStored){
 				int difference = (int) stone + (int) this.stoneStored;
-				this.stoneStored = 0;
+				this.stoneStored += (stone + difference);
 				this.stoneRemaining -= (stone + difference);
 				return difference;
 			} else {

@@ -147,11 +147,11 @@ public class AnimationSprite {
 					return 0;
 				}
 			} else {
-				if(this.economyController.getFoodStored() < (this.economyController.getFoodConsumption() * 2)){ // Income is lower than necessity
+				if(this.economyController.getFoodIncome() < 0 || this.economyController.getFoodStored() < (this.economyController.getFoodConsumption() * 0.5)){ // Income is lower than necessity
 					return 1;
 				}
 
-				if(	this.economyController.getFoodStored() > (this.economyController.getFoodConsumption() * 5)){ // Income is bigger than necessity and resource stored is more than the necessity
+				if((this.economyController.getFoodIncome() * 1.25) > this.economyController.getFoodConsumption()){ // Income is bigger than necessity and resource stored is more than the necessity
 					return 3;
 				}
 			}

@@ -22,7 +22,7 @@ public class Constants {
 
 	public static float WOOD_MULTIPLICATOR = 0.5f;
 	public static float STONE_MULTIPLICATOR = 0.25f;
-	public static float FOOD_MULTIPLICATOR = 0.7f;
+	public static float FOOD_MULTIPLICATOR = 1f;
 	public static float FOOD_CONSUMPTION = 0.2f;
 	public static int FOOD_SHORTAGE_TOLERANCE = 3;
 	public static int SOLDIER_WAGE_TOLERANCE = 3;

@@ -388,7 +388,7 @@ public class EconomyController implements IEconomyProgress{
 		if(difference == 0){
 			this.economyStatus.increaseCoinsBy(resource.getQuantity() * resource.getPrice());
 		} else {
-			this.economyStatus.increaseCoinsBy((resource.getQuantity() - difference) * resource.getPrice());
+			this.economyStatus.increaseCoinsBy((difference + resource.getQuantity()) * resource.getPrice());
 		}
 	}
 
