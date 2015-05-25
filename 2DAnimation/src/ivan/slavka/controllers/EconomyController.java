@@ -378,17 +378,17 @@ public class EconomyController implements IEconomyProgress{
 		int difference = 0;
 		switch(resource.getResource()){
 		case WOOD:
-			difference = this.wonder.increaseWoodStored((-1) * (int) resource.getQuantity());
+			difference = this.wonder.decreaseWoodStored(resource.getQuantity());
 			break;
 		case STONE:
-			difference = this.wonder.increaseStoneStored((-1) * (int) resource.getQuantity());
+			difference = this.wonder.decreaseStoneStored(resource.getQuantity());
 			break;
 		}
 
 		if(difference == 0){
 			this.economyStatus.increaseCoinsBy(resource.getQuantity() * resource.getPrice());
 		} else {
-			this.economyStatus.increaseCoinsBy((difference + resource.getQuantity()) * resource.getPrice());
+			this.economyStatus.increaseCoinsBy(difference * resource.getPrice());
 		}
 	}
 
@@ -418,7 +418,7 @@ public class EconomyController implements IEconomyProgress{
 	}
 
 	private void resetInvasion(){
-		this.turnsToInvasion = this.random.nextInt(10) + 50;
+		this.turnsToInvasion = this.random.nextInt(Constants.VARIABLE_INVASION_TURNS) + Constants.BASE_INVASION_TURNS;
 	}
 
 	@Override

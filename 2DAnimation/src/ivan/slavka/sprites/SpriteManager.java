@@ -22,8 +22,8 @@ public class SpriteManager {
 	private IEventGenerator eventGenerator;
 	private IEconomyProgress economyController;
 
-	private Map<EventSpriteEnum, Bitmap> eventSpriteBitmapMap = new HashMap<>();
-	private Map<GeneralSpriteEnum , Bitmap> generalSpriteBitmapMap = new HashMap<>();
+	private Map<EventSpriteEnum, Bitmap> eventSpriteBitmapMap = new HashMap<EventSpriteEnum, Bitmap>();
+	private Map<GeneralSpriteEnum , Bitmap> generalSpriteBitmapMap = new HashMap<GeneralSpriteEnum, Bitmap>();
 
 	private Bitmap bmp;
 	private GameView gameView;

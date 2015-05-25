@@ -66,6 +66,30 @@ public class WonderBean {
 	public void setStoneRemaining(float stoneRemaining) {
 		this.stoneRemaining = stoneRemaining;
 	}
+	
+	public int decreaseWoodStored(float wood){
+		int difference = 0;
+		if(wood <= this.woodStored){
+			this.woodStored -= wood;
+		} else {
+			difference = (int) this.woodStored;
+			this.woodStored -= difference;
+		}
+		
+		return difference;
+	}
+	
+	public int decreaseStoneStored(float stone){
+		int difference = 0;
+		if(stone <= this.stoneStored){
+			this.stoneStored -= stone;
+		} else {
+			difference = (int) this.stoneStored;
+			this.stoneStored -= difference;
+		}
+		
+		return difference;
+	}
 
 	public int increaseWoodStored(float wood){
 		if(wood < 0){

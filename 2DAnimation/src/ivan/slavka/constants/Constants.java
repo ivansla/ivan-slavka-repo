@@ -37,7 +37,7 @@ public class Constants {
 	// WonderBean
 	public static float BUILDER_WOOD_USAGE = 1f;
 	public static float BUILDER_STONE_USAGE = 0.5f;
-	public static int TURNS_NEEDED_FOR_BUILDER = 10000;
+	public static int TURNS_NEEDED_FOR_BUILDER = 1000;
 	public static float CONSTRUCTION_MULTIPLICATOR = 1f / TURNS_NEEDED_FOR_BUILDER;
 	public static float BASE_MAINTENANCE_QUOTIENT = 0.1f;
 
@@ -52,6 +52,10 @@ public class Constants {
 	public static int RANSACK_MAX = 50;
 	public static int RANSACK_MIN = 30;
 
+	// EconomyController
+	public static int BASE_INVASION_TURNS = 70;
+	public static int VARIABLE_INVASION_TURNS = 20;
+	
 	public final static AttributeBean[] ATTRIBUTES = {
 		new AttributeBean(-10, -6, 5),
 		new AttributeBean(-5, -1, 2),

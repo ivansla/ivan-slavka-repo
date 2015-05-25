@@ -37,10 +37,15 @@ public class CombatSimulator {
 		this.playerArmy.reinitializeArmy(this.economyProgressController.getSoldiers(), Constants.PLAYER_SOLDIER_HITPOINTS);
 		this.computerArmy.reinitializeArmy(numberOfEnemies);
 	}
-
+	
+	public void initArmies(int numberOfEnemies, int numberOfSoldiers){
+		this.playerArmy.reinitializeArmy(numberOfSoldiers, Constants.PLAYER_SOLDIER_HITPOINTS);
+		this.computerArmy.reinitializeArmy(numberOfEnemies);
+	}
+	
 	public CombatVictoryEnum performCombat(int numberOfEnemies){
 		this.battleFinished = false;
-		this.initArmies(numberOfEnemies);
+		//this.initArmies(numberOfEnemies);
 
 		LoggingUtils.log(CombatSimulator.class, "performCombat", "Player Army: " + this.playerArmy.numberOfLiveSoldiers());
 		LoggingUtils.log(CombatSimulator.class, "performCombat", "Enemy Army: " + this.computerArmy.numberOfLiveSoldiers());
@@ -75,9 +80,9 @@ public class CombatSimulator {
 			this.victoryEnum = CombatVictoryEnum.EVEN;
 		}
 
-		//this.showBattleStatus();
+		this.showBattleStatus();
 
-		this.economyProgressController.increaseNumberOfSoldiers(this.playerArmy.numberOfLiveSoldiers() - this.economyProgressController.getSoldiers());
+		//this.economyProgressController.increaseNumberOfSoldiers(this.playerArmy.numberOfLiveSoldiers() - this.economyProgressController.getSoldiers());
 		return this.victoryEnum;
 	}
 
