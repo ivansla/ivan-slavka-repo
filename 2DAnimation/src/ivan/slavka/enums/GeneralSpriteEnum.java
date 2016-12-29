@@ -1,0 +1,18 @@
+package ivan.slavka.enums;
+
+public enum GeneralSpriteEnum {
+
+	WORLD,
+	BUILDER_CAMP,
+	GRANARY,
+	LUMBER_CAMP,
+	SOLDIER_CAMP,
+	STONE_WAREHOUSE,
+	WOOD_WAREHOUSE,
+	GOLD_WAREHOUSE,
+	BARQUE,
+	BARQUE_COVERED,
+	WONDER,
+	FARM_CAMP,
+	QUARRY_CAMP
+}

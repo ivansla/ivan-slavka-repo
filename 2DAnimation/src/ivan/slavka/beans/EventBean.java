@@ -1,6 +1,8 @@
 package ivan.slavka.beans;
 
 import ivan.slavka.enums.EventTypeEnum;
+import ivan.slavka.generators.Randomizer;
+import ivan.slavka.interfaces.IEconomyProgress;
 import ivan.slavka.interfaces.IEvent;
 
 import java.util.Random;
@@ -9,16 +11,25 @@ public class EventBean implements IEvent{
 
 	private boolean isReleased = false;
 	private boolean isSpecial = false;
-	private Random random = new Random();
-	private EventEffectBean[] eventEffects = {
-			new EventEffectBean(),
-			new EventEffectBean()
-	};
+	private Random random = Randomizer.getInstance();
+	private EventEffectBean[] eventEffects;
 
-	public void generateSpecialEvent(int level, int roll){
+	public EventBean(){}
+
+	public EventBean(IEconomyProgress economyController){
+
+		this.eventEffects =  new EventEffectBean[2];
+		this.eventEffects[0] = new EventEffectBean(economyController);
+		this.eventEffects[1] = new EventEffectBean(economyController);
+	}
+
+	public boolean generateSpecialEvent(int level, int roll){
 		this.isSpecial = true;
-		this.eventEffects[0].rollAttributes(EventTypeEnum.SPECIAL_EVENT, level, roll);
-		this.eventEffects[1] = this.eventEffects[0];
+		boolean specialEventGenerationSuccessfull = this.eventEffects[0].rollAttributes(EventTypeEnum.SPECIAL_EVENT, level, roll);
+		if(specialEventGenerationSuccessfull){
+			this.eventEffects[1] = this.eventEffects[0];
+		}
+		return specialEventGenerationSuccessfull;
 	}
 
 	public void generateEvent(int level, EventTypeEnum eventType){
@@ -48,23 +59,25 @@ public class EventBean implements IEvent{
 					break;
 				}
 			}
-
 		}
 
 		while(this.eventEffects[0].getEventType().equals(this.eventEffects[1].getEventType()) &&
 				this.eventEffects[0].getEventResources()[0].getResource().equals(this.eventEffects[1].getEventResources()[0].getResource())){
 
-			int roll = this.random.nextInt(3);
-			switch(roll){
-			case 0:
-				this.eventEffects[1].rollAttributes(EventTypeEnum.WORKER, level, roll);
-				break;
-			case 1:
-				this.eventEffects[1].rollAttributes(EventTypeEnum.RESOURCE, level, roll);
-				break;
-			case 2:
-				this.eventEffects[1].rollAttributes(EventTypeEnum.RAID, level, roll);
-				break;
+			boolean successfullRoll = false;
+			while(!successfullRoll){
+				int roll = this.random.nextInt(3);
+				switch(roll){
+				case 0:
+					successfullRoll = this.eventEffects[1].rollAttributes(EventTypeEnum.WORKER, level, roll);
+					break;
+				case 1:
+					successfullRoll = this.eventEffects[1].rollAttributes(EventTypeEnum.RESOURCE, level, roll);
+					break;
+				case 2:
+					successfullRoll = this.eventEffects[1].rollAttributes(EventTypeEnum.RAID, level, roll);
+					break;
+				}
 			}
 		}
 	}

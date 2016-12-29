@@ -4,13 +4,16 @@ import ivan.slavka.beans.EconomyStatusBean;
 import ivan.slavka.beans.EventEffectBean;
 import ivan.slavka.beans.ResourceBean;
 import ivan.slavka.beans.WonderBean;
+import ivan.slavka.constants.Constants;
 import ivan.slavka.enums.CombatVictoryEnum;
 import ivan.slavka.enums.EventBehaviorEnum;
 import ivan.slavka.enums.EventTypeEnum;
 import ivan.slavka.enums.InputControlEnum;
 import ivan.slavka.generators.CombatSimulator;
+import ivan.slavka.generators.Randomizer;
 import ivan.slavka.interfaces.IEconomyProgress;
 import ivan.slavka.interfaces.IEvent;
+import ivan.slavka.utils.LoggingUtils;
 
 import java.util.Random;
 
@@ -22,11 +25,15 @@ public class EconomyController implements IEconomyProgress{
 	private EconomyStatusBean economyStatus;
 	private WonderBean wonder;
 	private CombatSimulator combatSimulator;
-	private Random random = new Random();
+	private Random random = Randomizer.getInstance();
 
 	private EventEffectBean invasionEvent = new EventEffectBean();
 
 	private int turnsToInvasion;
+	private int turnsProcessed = 0;
+	private boolean invasionExists = true;
+	private boolean isGameOver = false;
+	private boolean isVictory = false;
 
 	public EconomyController(){
 		this.economyStatus = new EconomyStatusBean(this);
@@ -34,6 +41,11 @@ public class EconomyController implements IEconomyProgress{
 		this.combatSimulator = new CombatSimulator(this);
 
 		this.resetInvasion();
+	}
+
+	public EconomyController(boolean invasionExists){
+		this();
+		this.invasionExists = invasionExists;
 	}
 
 	// IWonderConstruction
@@ -111,28 +123,50 @@ public class EconomyController implements IEconomyProgress{
 
 	@Override
 	public void processEvent(IEvent event, InputControlEnum input) {
+		this.turnsProcessed++;
+
+		this.wonder.increaseStoneStored(this.economyStatus.getStoneIncome());
+		this.wonder.increaseWoodStored(this.economyStatus.getWoodIncome());
+
+		LoggingUtils.log("EconomyController.processEvent", "******************************************************************");
+		LoggingUtils.log(EconomyController.class, "processEvent", "Turns processed: " + this.turnsProcessed);
+		LoggingUtils.log("EconomyController.processEvent", "Possible events: " + event.getPrimaryEffect().getEventName() + " behavior: " + event.getPrimaryEffect().getBehavior() + ";" + event.getSecondaryEffect().getEventName() + " behavior: " + event.getSecondaryEffect().getBehavior());
+
 		switch(input){
 		case LEFT:
+			LoggingUtils.log("EconomyController.processEvent", "Processing event: " + event.getPrimaryEffect().getEventName());
+			LoggingUtils.log("EconomyController.processEvent", "Resource: " + event.getPrimaryEffect().getEventResources()[0].getResource() + " Quantity: " + event.getPrimaryEffect().getEventResources()[0].getQuantity());
 			this.applyEvent(event.getPrimaryEffect());
-			//Log.v("processEvent", "Resource: " + event.getPrimaryResource() + " Quantity: " + event.getPrimaryQuantity());
 			break;
 		case RIGHT:
+			LoggingUtils.log("EconomyController.processEvent", "Processing event: " + event.getSecondaryEffect().getEventName());
+			LoggingUtils.log("EconomyController.processEvent", "Resource: " + event.getSecondaryEffect().getEventResources()[0].getResource() + " Quantity: " + event.getSecondaryEffect().getEventResources()[0].getQuantity());
 			this.applyEvent(event.getSecondaryEffect());
-			//Log.v("processEvent", "Resource: " + event.getSecondaryResource() + " Quantity: " + event.getSecondaryQuantity());
 			break;
 		}
 
 		this.economyStatus.updateEconomyStatus();
-		this.wonder.increaseStoneStored(this.economyStatus.getStoneIncome());
-		this.wonder.increaseWoodStored(this.economyStatus.getWoodIncome());
-		this.wonder.updateWonderConstruction();
+		if(this.economyStatus.isCivilizationDead()){
+			this.isGameOver = true;
+			return;
+		}
 
-		if(this.turnsToInvasion <= 0){
-			this.invasionEvent.rollAttributes(EventTypeEnum.ATTACK, this.getLevel(), -1);
-			this.resetInvasion();
-			this.applyEvent(this.invasionEvent);
-		} else {
-			this.turnsToInvasion--;
+		this.wonder.updateWonderConstruction();
+		if(this.wonder.getCompleted() >= 100){
+			this.isGameOver = true;
+			this.isVictory = true;
+		}
+
+		if(this.invasionExists){
+			if(this.turnsToInvasion <= 0){
+				this.invasionEvent.rollAttributes(EventTypeEnum.ATTACK, this.getLevel(), -1);
+				this.resetInvasion();
+				LoggingUtils.log("EconomyController.processEvent", "Processing invasion event: " + this.invasionEvent.getEventType());
+				this.applyEvent(this.invasionEvent);
+			} else {
+				this.turnsToInvasion--;
+				LoggingUtils.log("EconomyController.processEvent", "Turns to invasion: " + this.turnsToInvasion);
+			}
 		}
 	}
 
@@ -154,15 +188,17 @@ public class EconomyController implements IEconomyProgress{
 			this.handleInvasionEvent(eventEffect);
 			break;
 		}
+
+		LoggingUtils.log("EconomyController.applyEvent", "Worker status");
+		LoggingUtils.log("EconomyController.applyEvent", "Wood worker: " + this.getWoodWorkers());
+		LoggingUtils.log("EconomyController.applyEvent", "Stone worker: " + this.getStoneWorkers());
+		LoggingUtils.log("EconomyController.applyEvent", "Food worker: " + this.getFoodWorkers());
+		LoggingUtils.log("EconomyController.applyEvent", "Builder: " + this.getBuilders());
+		LoggingUtils.log("EconomyController.applyEvent", "Soldier: " + this.getSoldiers());
+		LoggingUtils.log("EconomyController.applyEvent", "Coins: " + this.getCoins());
 	}
 
 	private void handleInvasionEvent(EventEffectBean eventEffect){
-		int executionMax = 80;
-		int executionMin = 30;
-		int enslaveMax = 50;
-		int enslaveMin = 20;
-		int ransackMax = 50;
-		int ransackMin = 30;
 
 		CombatVictoryEnum combatEnum = this.combatSimulator.performCombat((int) eventEffect.getEventResources()[0].getQuantity());
 		switch(combatEnum){
@@ -170,7 +206,8 @@ public class EconomyController implements IEconomyProgress{
 			int roll = this.random.nextInt(10);
 			// TODO: Implementation needs to be improved
 			if(roll < 2){	// Execution
-				float executionPct = (this.random.nextInt(executionMax - executionMin) + executionMin) * 0.01f;
+				float executionPct = (this.random.nextInt(Constants.EXECUTION_MAX - Constants.EXECUTION_MIN) + Constants.EXECUTION_MIN) * 0.01f;
+				LoggingUtils.log(EconomyController.class, "handleInvasionEvent", "Executing population! " + (executionPct * 100) + "%");
 				int execution = (int) (this.getTotalPopulation() * executionPct);
 				int decrementalValue = (int) (execution * 0.25);
 				this.economyStatus.increaseBuildersBy(-1 * decrementalValue);
@@ -178,7 +215,8 @@ public class EconomyController implements IEconomyProgress{
 				this.economyStatus.increaseWoodWorkersBy(-1 * decrementalValue);
 				this.economyStatus.increaseStoneWorkersBy(-1 * decrementalValue);
 			} else if(roll >= 2 && roll < 5){ // Enslavement
-				float enslavePct = (this.random.nextInt(enslaveMax - enslaveMin) + enslaveMin) * 0.01f;
+				float enslavePct = (this.random.nextInt(Constants.ENSLAVE_MAX - Constants.ENSLAVE_MIN) + Constants.ENSLAVE_MIN) * 0.01f;
+				LoggingUtils.log(EconomyController.class, "handleInvasionEvent", "Enslaving population! " + (enslavePct * 100) + "%");
 				int enslave = (int) (this.getTotalPopulation() * enslavePct);
 				int decrementalValue = (int) (enslave * 0.25);
 				this.economyStatus.increaseBuildersBy(-1 * decrementalValue);
@@ -186,7 +224,8 @@ public class EconomyController implements IEconomyProgress{
 				this.economyStatus.increaseWoodWorkersBy(-1 * decrementalValue);
 				this.economyStatus.increaseStoneWorkersBy(-1 * decrementalValue);
 			} else { // Ransack
-				float ransackPct = (this.random.nextInt(ransackMax - ransackMin) + ransackMin) * 0.01f;
+				float ransackPct = (this.random.nextInt(Constants.RANSACK_MAX - Constants.RANSACK_MIN) + Constants.RANSACK_MIN) * 0.01f;
+				LoggingUtils.log(EconomyController.class, "handleInvasionEvent", "Ransacking population! " + (ransackPct * 100) + "%");
 				float woodRansack = this.getWoodStored() * ransackPct;
 				this.wonder.increaseWoodStored(-woodRansack);
 				float stoneRansack = this.getStoneStored() * ransackPct;
@@ -253,12 +292,13 @@ public class EconomyController implements IEconomyProgress{
 			}
 			break;
 		}
+		LoggingUtils.log("EconomyController.handleResourceEvent", "Resource: " + eventEffect.getEventResources()[0].getResource() + " behavior: " + eventEffect.getBehavior() + " quantity: " + eventEffect.getEventResources()[0].getQuantity());
 	}
 
 	private void handleRaid(EventEffectBean eventEffect){
 		int roll = this.random.nextInt(10);
 		if(roll < 3){
-			switch(eventEffect.getSpecialEventName()){
+			switch(eventEffect.getEventName()){
 			case RAID_TOWN:
 				roll = this.random.nextInt(TOWN_LOSS_MAX);
 				break;
@@ -268,6 +308,10 @@ public class EconomyController implements IEconomyProgress{
 			}
 
 			for(ResourceBean resource : eventEffect.getEventResources()){
+				if(resource.getResource() == null){
+					continue;
+				}
+
 				switch(resource.getResource()){
 				case STONE:
 					this.wonder.increaseStoneStored(resource.getQuantity());
@@ -293,7 +337,7 @@ public class EconomyController implements IEconomyProgress{
 
 		float quantity = eventEffect.getEventResources()[0].getQuantity();
 
-		switch(eventEffect.getSpecialEventName()){
+		switch(eventEffect.getEventName()){
 		case BABY_BOOM:
 			int newborns = (int) (this.getTotalPopulation() * quantity * 0.01f * 0.5f); // percentage; half of population are women
 			int incrementalValue = (int) (newborns * 0.25);
@@ -334,21 +378,22 @@ public class EconomyController implements IEconomyProgress{
 		int difference = 0;
 		switch(resource.getResource()){
 		case WOOD:
-			difference = this.wonder.increaseWoodStored(resource.getQuantity());
+			difference = this.wonder.decreaseWoodStored(resource.getQuantity());
 			break;
 		case STONE:
-			difference = this.wonder.increaseStoneStored(resource.getQuantity());
+			difference = this.wonder.decreaseStoneStored(resource.getQuantity());
 			break;
 		}
 
 		if(difference == 0){
 			this.economyStatus.increaseCoinsBy(resource.getQuantity() * resource.getPrice());
 		} else {
-			this.economyStatus.increaseCoinsBy((resource.getQuantity() - difference) * resource.getPrice());
+			this.economyStatus.increaseCoinsBy(difference * resource.getPrice());
 		}
 	}
 
-	private int getTotalPopulation(){
+	@Override
+	public int getTotalPopulation(){
 		return this.getBuilders() + this.getStoneWorkers() + this.getWoodWorkers() + this.getFoodWorkers() + this.getSoldiers();
 	}
 
@@ -373,11 +418,55 @@ public class EconomyController implements IEconomyProgress{
 	}
 
 	private void resetInvasion(){
-		this.turnsToInvasion = this.random.nextInt(5) + 20;
+		this.turnsToInvasion = this.random.nextInt(Constants.VARIABLE_INVASION_TURNS) + Constants.BASE_INVASION_TURNS;
 	}
 
 	@Override
 	public int getLevel() {
 		return (int) (this.wonder.getCompleted() * 0.1);
+	}
+
+	@Override
+	public float getWoodMaintenace() {
+		return this.wonder.getWoodMaintenace();
+	}
+
+	@Override
+	public float getStoneMaintenace() {
+		return this.wonder.getStoneMaintenace();
+	}
+
+	@Override
+	public float getWoodBuilding() {
+		return this.wonder.getWoodBuilding();
+	}
+
+	@Override
+	public float getStoneBuilding() {
+		return this.wonder.getStoneBuilding();
+	}
+
+	@Override
+	public float getFoodConsumption() {
+		return this.economyStatus.getFoodConsumtion();
+	}
+
+	@Override
+	public void restartGame() {
+		this.isGameOver = false;
+		this.isVictory = false;
+		this.turnsProcessed = 0;
+
+		this.economyStatus.restartEconomyStatus();
+		this.wonder.restartWonder();
+	}
+
+	@Override
+	public boolean isGameOver() {
+		return this.isGameOver;
+	}
+
+	public boolean isVictory() {
+		return this.isVictory;
 	}
 }

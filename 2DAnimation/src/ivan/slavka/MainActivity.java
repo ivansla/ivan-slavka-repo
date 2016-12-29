@@ -15,6 +15,9 @@ public class MainActivity extends Activity implements IViewSwitcher{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+		//LoggingUtils.addIgnoreClass(WonderBean.class);
+
 		this.setContentView(new StartGameView(this, this));
 	}
 

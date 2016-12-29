@@ -1,9 +1,11 @@
 package ivan.slavka.sprites;
 
 import ivan.slavka.GameView;
+import ivan.slavka.enums.EventSpriteEnum;
 import ivan.slavka.enums.InputControlEnum;
 import ivan.slavka.interfaces.IEvent;
 
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -20,7 +22,8 @@ public class Sprite {
 
 	private static float SWIPE_ANIMATION_TIME = 0.5f * GameView.FPS;
 	private static float FALL_ANIMATION_TIME = 2f * GameView.FPS;
-	public final static int SIZE = 50;
+	public final static int WIDTH_SIZE = 128;
+	public final static int HEIGHT_SIZE = 128;
 	private static double GRAVITY = 0.981f;
 	private static int TOLERANCE = 50;
 
@@ -30,14 +33,14 @@ public class Sprite {
 
 
 	//private float distanceY;
-	private PointF position;// = new PointF(200f, 100f);
+	private boolean isLowestSprite = false;
+	private Bitmap[] bitmaps;
 	private float deltaX;
-	private boolean isClicked = false;
 	private int side;
 	private boolean isPerformingAnimation = true;
 	private boolean isInTolerance = true;
+	private boolean isMoved = false;
 	private double acceleration = 0d;
-	public volatile boolean isPressed = false;
 	private double velocityX = 0d;
 	private float velocityY = 0f;
 	private boolean isReleased;
@@ -56,7 +59,13 @@ public class Sprite {
 	private Paint textPaint;
 
 	public float referencePoint;
-	private float spriteDestinationX;
+	private PointF position;// = new PointF(200f, 100f);
+
+	public volatile boolean isPressed = false;
+	private volatile boolean isClicked = false;
+	private volatile float positionX;
+	private volatile float positionY;
+	private volatile float spriteDestinationX;
 	private float spriteDestinationY;
 
 
@@ -65,9 +74,11 @@ public class Sprite {
 
 	public Sprite() {
 
+		this.bitmaps = new Bitmap[4];
+
 		this.alpha = 255;
 		this.isReleased = false;
-		//this.spriteDestinationX = this.position.x;
+		//this.spriteDestinationX = this.positionX;
 		this.spriteActivated = false;
 		this.referencePoint = this.x;
 
@@ -77,7 +88,7 @@ public class Sprite {
 		//this.height = bmp.getHeight() / BMP_ROWS;
 
 		this.drawPaint = new Paint();
-		this.drawPaint.setColor(Color.RED);
+		this.drawPaint.setColor(Color.WHITE);
 
 		this.drawPaint.setAntiAlias(true);
 		//this.drawPaint.setStrokeWidth(20);
@@ -89,109 +100,114 @@ public class Sprite {
 		this.textPaint.setStyle(Paint.Style.FILL);
 	}
 
-	public void prepareSprite(GameView gameView, Bitmap bmp){
+	public void prepareSprite(GameView gameView, Bitmap barqueBitmap, Bitmap barqueCoveredBitmap){
 		if(this.gameView == null){
 
 			this.gameView = gameView;
 			this.drawingRect = new Rect();
 			gameView.getWindowVisibleDisplayFrame(this.drawingRect);
-			this.position = new PointF((this.drawingRect.exactCenterX() - (SIZE * 0.5f)), 0f);
+			this.positionX = (this.drawingRect.exactCenterX() - (WIDTH_SIZE * 0.5f));
+			this.positionY = 0f;
+
+			//this.position = new PointF((this.drawingRect.exactCenterX() - (WIDTH_SIZE * 0.5f)), 0f);
+			this.bitmaps[2] = barqueBitmap;
+			this.bitmaps[3] = barqueCoveredBitmap;
 		}
 	}
 
-	private void update() {
+	public void prepareSpriteBitmaps(Map<EventSpriteEnum, Bitmap> eventSpriteBitmapMap){
+		this.bitmaps[0] = eventSpriteBitmapMap.get(this.getEvent().getPrimaryEffect().getEventName());
+		this.bitmaps[1] = eventSpriteBitmapMap.get(this.getEvent().getSecondaryEffect().getEventName());
+	}
+
+	private synchronized void update() {
 
 		if(!this.isPressed && !this.isClicked){
-			if(this.spriteDestinationY >= this.position.y + this.velocityY){
-				this.position.y += this.velocityY;
+			if(this.spriteDestinationY >= this.positionY + this.velocityY){
+				this.positionY += this.velocityY;
+				this.isPerformingAnimation = true;
 			} else {
-				this.position.y = this.spriteDestinationY;
+				this.positionY = this.spriteDestinationY;
 				this.isPerformingAnimation = false;
 			}
 		}
 
 		if(this.isPressed){
-			this.position.x = this.spriteDestinationX;
-			//this.y = this.spriteDestinationY;
+			this.positionX = this.spriteDestinationX;
 		}
 
 		if(!this.isPressed && this.isClicked){
-
+			this.isPerformingAnimation = true;
 			if(this.isInTolerance){
-				this.position.x -= this.velocityX;
+				//Log.v("Sprite.update", "isInTolerance");
+				//Log.v("Sprite.update", "isLowestSprite: " + this.isLowestSprite);
+				this.positionX -= this.velocityX;
 				this.velocityX -= this.acceleration;
-				if(this.side == -1 && this.position.x + this.deltaX >= this.referencePoint){
+
+				if(this.side == -1 && this.positionX + this.deltaX >= this.referencePoint){
 					this.isClicked = false;
-					this.position.x = this.referencePoint - this.deltaX;
-					this.spriteDestinationX = this.position.x;
+					this.positionX = this.referencePoint - this.deltaX;
+					this.spriteDestinationX = this.positionX;
 					this.isPerformingAnimation = false;
 					this.velocityX = 0d;
 				}
-				if(this.side == 1 && this.position.x + this.deltaX <= this.referencePoint){
+				if(this.side == 1 && this.positionX + this.deltaX <= this.referencePoint){
 					this.isClicked = false;
-					this.position.x = this.referencePoint - this.deltaX;
-					this.spriteDestinationX = this.position.x;
+					this.positionX = this.referencePoint - this.deltaX;
+					this.spriteDestinationX = this.positionX;
 					this.isPerformingAnimation = false;
 					this.velocityX = 0d;
+				}
+				if(this.side == 0){
+					this.isClicked = false;
 				}
 			} else {
 				this.alpha -= this.alphaIncrement;
 				this.drawPaint.setAlpha(this.alpha);
-				this.position.x += this.velocityX;
+				this.positionX += this.velocityX;
 				this.velocityX += this.acceleration;
-
+				//Log.v("Sprite.update", "else");
+				//Log.v("Sprite.update", "isLowestSprite: " + this.isLowestSprite);
 				if(this.alpha <= 0){
 					this.isPerformingAnimation = false;
 				}
 			}
 		}
-		/*
-		Log.v("update", "defaultVelocity: " + this.defaultVelocity);
-		Log.v("update", "deceleration" + this.deceleration);
-		 */
 	}
 
 	public void setSpritePath(float x, int y){
 		this.spriteDestinationX = x - this.deltaX;
 	}
 
-	public void onDraw(Canvas canvas) {
-		this.update();
-		canvas.drawRect(this.position.x, this.position.y, this.position.x + SIZE, this.position.y + SIZE, this.drawPaint);
-
-		if(this.event.isSpecialEvent()){
-			canvas.drawText("" + this.event.getPrimaryEffect().getSpecialEventName(), this.position.x + 2, this.position.y + 10, this.textPaint);
-			canvas.drawText("" + this.event.getPrimaryEffect().getEventResources()[0].getQuantity(), this.position.x + 2, this.position.y + 20, this.textPaint);
-		} else {
-			canvas.drawText("" + this.event.getPrimaryEffect().getEventResources()[0].getResource().getAbbr(), this.position.x + 2, this.position.y + 10, this.textPaint);
-			canvas.drawText("" + this.event.getPrimaryEffect().getEventResources()[0].getQuantity(), this.position.x + 2, this.position.y + 20, this.textPaint);
-
-			canvas.drawText("" + this.event.getSecondaryEffect().getEventResources()[0].getResource().getAbbr(), this.position.x + 2 + 28, this.position.y + 10, this.textPaint);
-			canvas.drawText("" + this.event.getSecondaryEffect().getEventResources()[0].getQuantity(), this.position.x + 2 + 28, this.position.y + 20, this.textPaint);
+	public synchronized void spriteActionDown(float x){
+		if(!this.isLowestSprite){
+			return;
 		}
-	}
 
-	public boolean isCollition(double x2, double y2) {
-		boolean isCollition = x2 > this.position.x && x2 < this.position.x + SIZE && y2 > this.position.y && y2 < this.position .y + SIZE;
-		return isCollition;
-	}
-
-	public void spriteActionDown(float x){
 		if(!this.isPerformingAnimation){
+			this.side = 0;
 			this.isPressed = true;
-			this.deltaX = x - this.position.x;
+			this.deltaX = x - this.positionX;
 			this.referencePoint = x;
-			this.isClicked = true;
-			//this.position.x = x;
+			//this.isClicked = true;
 			this.setSpritePath(x, 0);
 		}
 	}
 
-	public void spriteActionUp(float x){
+	public synchronized void spriteActionUp(float x){
+		if(!this.isLowestSprite){
+			return;
+		}
+
 		if(!this.isPerformingAnimation){
+			this.isClicked = true;
 			this.isPressed = false;
+			if(!this.isMoved){
+				this.isClicked = false;
+			}
+
 			if(this.isInTolerance){
-				this.distance = this.position.x + this.deltaX - this.referencePoint;
+				this.distance = this.positionX + this.deltaX - this.referencePoint;
 				this.acceleration = (2 * this.distance) / (SWIPE_ANIMATION_TIME * SWIPE_ANIMATION_TIME);  //(this.distance / (ANIMATION_TIME * ANIMATION_TIME * 30 * 30));
 				this.velocityX = this.acceleration * (SWIPE_ANIMATION_TIME);
 
@@ -203,16 +219,17 @@ public class Sprite {
 			} else {
 
 				if(this.isGoingLeft(x)){
-					this.distance = this.position.x + this.deltaX;
+					this.distance = this.positionX + this.deltaX;
 					this.acceleration = (2 * (-this.distance)) / (SWIPE_ANIMATION_TIME * SWIPE_ANIMATION_TIME);  //(this.distance / (ANIMATION_TIME * ANIMATION_TIME * 30 * 30));
 				}
 
 				if(this.isGoingRight(x)){
-					this.distance = this.drawingRect.width() - (this.position.x + this.deltaX);
+					this.distance = this.drawingRect.width() - (this.positionX + this.deltaX);
 					this.acceleration = (2 * this.distance) / (SWIPE_ANIMATION_TIME * SWIPE_ANIMATION_TIME);  //(this.distance / (ANIMATION_TIME * ANIMATION_TIME * 30 * 30));
 				}
 
 				this.spriteActivated = true;
+				this.isMoved = false;
 			}
 
 			this.isPerformingAnimation = true;
@@ -220,11 +237,33 @@ public class Sprite {
 
 	}
 
-	public void spriteActionMove(float x){
-		if(!this.isPerformingAnimation){
+	public synchronized void spriteActionMove(float x){
+		if(!this.isPerformingAnimation && this.isLowestSprite){
+			this.isMoved = true;
 			this.setSpritePath(x, 0);
 			this.isInTolerance = this.calculateIsInTolerance(x);
 		}
+	}
+
+	public void onDraw(Canvas canvas) {
+		this.update();
+		//canvas.drawRect(this.positionX, this.positionY, this.positionX + WIDTH_SIZE, this.positionY + HEIGHT_SIZE, this.drawPaint);
+		canvas.drawBitmap(this.bitmaps[3], this.positionX, this.positionY, null);
+
+		if((this.isLowestSprite && !this.isPerformingAnimation) || ((this.isMoved || this.spriteActivated) && this.isPerformingAnimation)){
+			canvas.drawBitmap(this.bitmaps[2], this.positionX, this.positionY, null);
+			if(this.event.isSpecialEvent()){
+				canvas.drawBitmap(this.bitmaps[0], this.positionX, this.positionY + 10, null);
+			} else {
+				canvas.drawBitmap(this.bitmaps[0], this.positionX, this.positionY + 10, null);
+				canvas.drawBitmap(this.bitmaps[1], (this.positionX + (WIDTH_SIZE * 0.5f)), this.positionY + 10, null);
+			}
+		}
+	}
+
+	public boolean isCollition(double x2, double y2) {
+		boolean isCollition = x2 > this.positionX && x2 < this.positionX + WIDTH_SIZE && y2 > this.positionY && y2 < this.positionY + HEIGHT_SIZE;
+		return isCollition;
 	}
 
 	/*
@@ -266,7 +305,7 @@ public class Sprite {
 	}
 
 	public void setSpriteYDestination(float y){
-		float distanceY = y;// - this.position.y;
+		float distanceY = y;// - this.positionY;
 		this.spriteLock.lock();
 		this.velocityY = distanceY / FALL_ANIMATION_TIME;
 		this.spriteDestinationY = y;
@@ -307,5 +346,13 @@ public class Sprite {
 		} else {
 			return InputControlEnum.RIGHT;
 		}
+	}
+
+	public boolean isLowestSprite() {
+		return this.isLowestSprite;
+	}
+
+	public void setLowestSprite(boolean isLowestSprite) {
+		this.isLowestSprite = isLowestSprite;
 	}
 }

@@ -1,25 +1,25 @@
 package ivan.slavka.beans;
 
-public class SoldierBean {
+import ivan.slavka.constants.Constants;
 
-	private static int DEFAULT_NUMBER_OF_HITPOINTS = 30;
+public class SoldierBean {
 
 	private int maxNumberOfHitPoints;
 	private int currentNumberOfHitPoints;
 	private boolean isAlive;
 
 	public SoldierBean(){
-		this.maxNumberOfHitPoints = DEFAULT_NUMBER_OF_HITPOINTS;
-		this.currentNumberOfHitPoints = DEFAULT_NUMBER_OF_HITPOINTS;
+		this.maxNumberOfHitPoints = Constants.DEFAULT_NUMBER_OF_HITPOINTS;
+		this.currentNumberOfHitPoints = Constants.DEFAULT_NUMBER_OF_HITPOINTS;
 
-		this.isAlive = true;
+		this.isAlive = false;
 	}
 
 	public SoldierBean(int maxNumberOfHitPoints){
 		this.maxNumberOfHitPoints = maxNumberOfHitPoints;
 		this.currentNumberOfHitPoints = maxNumberOfHitPoints;
 
-		this.isAlive = true;
+		this.isAlive = false;
 	}
 
 	public void takeDamage(){
@@ -38,5 +38,13 @@ public class SoldierBean {
 
 	public boolean isAlive(){
 		return this.isAlive;
+	}
+
+	public void setAlive(boolean isAlive){
+		this.isAlive = isAlive;
+	}
+
+	public void setMaxNumberOfHitPoints(int maxNumberOfHitPoints){
+		this.maxNumberOfHitPoints = maxNumberOfHitPoints;
 	}
 }

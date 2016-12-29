@@ -1,28 +1,26 @@
 package ivan.slavka.beans;
 
+import ivan.slavka.constants.Constants;
 import ivan.slavka.interfaces.IWonderConstruction;
-import android.util.Log;
+import ivan.slavka.utils.LoggingUtils;
 
 public class EconomyStatusBean {
 
-	private static float WOOD_MULTIPLICATOR = 0.5f;
-	private static float STONE_MULTIPLICATOR = 0.25f;
-	private static float FOOD_MULTIPLICATOR = 0.7f;
-	private static float FOOD_CONSUMPTION = 0.2f;
-
-	private static int FOOD_SHORTAGE_TOLERANCE = 3;
 	private static int NUMBER_OF_WORKER_TYPES = 5;
 
 	private int turnsWithoutFood = 0;
+	private int turnsWithoutWage = 0;
+
+	private boolean isCivilizationDead = false;
 
 	private float coins = 0f;
-	private float foodStorage = 10;
+	private volatile float foodStorage = Constants.STARTING_FOOD_AMOUNT;
 	private float woodIncome;
-	private int woodWorkers = 1;
+	private int woodWorkers = 0;
 	private float stoneIncome;
-	private int stoneWorkers = 1;
-	private float foodIncome;
-	private int foodWorkers = 1;
+	private int stoneWorkers = 0;
+	private volatile float foodIncome;
+	private int foodWorkers = 0;
 	private int soldiers = 0;
 	private int builders = 0;
 
@@ -151,7 +149,7 @@ public class EconomyStatusBean {
 				this.coins += difference;
 				return difference;
 			} else {
-				this.coins -= coins;
+				this.coins += coins;
 			}
 		} else {
 			this.coins += coins;
@@ -171,7 +169,7 @@ public class EconomyStatusBean {
 				this.foodStorage += difference;
 				return difference;
 			} else {
-				this.foodStorage -= food;
+				this.foodStorage += food;
 			}
 		} else {
 			this.foodStorage += food;
@@ -193,20 +191,60 @@ public class EconomyStatusBean {
 
 	public void updateEconomyStatus(){
 		this.calculateResourceIncome();
+		this.maintainArmy();
 		this.consumeFood();
+	}
+
+	public float getFoodConsumtion(){
+		int numberOfPeople = this.getTotalPopulation();
+		return (numberOfPeople * Constants.FOOD_CONSUMPTION);
+	}
+
+	private int getTotalPopulation(){
+		return this.foodWorkers + this.woodWorkers + this.stoneWorkers + this.builders + this.soldiers;
+	}
+
+	private void maintainArmy(){
+		int totalSoldierWage = this.soldiers * Constants.SOLDIER_WAGE;
+		if(this.coins >= totalSoldierWage){
+			this.increaseCoinsBy(-totalSoldierWage);
+			LoggingUtils.log(EconomyStatusBean.class, "maintainArmy", "Paying soldiers: " + totalSoldierWage);
+			this.turnsWithoutWage = 0;
+		} else {
+			this.turnsWithoutWage++;
+			if(this.turnsWithoutWage > Constants.SOLDIER_WAGE_TOLERANCE){
+				int numberOfMaintainedSoldiers = (int) (this.coins / Constants.SOLDIER_WAGE);
+				LoggingUtils.log(EconomyStatusBean.class, "maintainArmy", "Paying soldiers: " + (-numberOfMaintainedSoldiers * Constants.SOLDIER_WAGE));
+				this.increaseCoinsBy((-numberOfMaintainedSoldiers * Constants.SOLDIER_WAGE));
+				int numberOfDeserters = this.soldiers - numberOfMaintainedSoldiers;
+				this.increaseSoldiersBy(-numberOfDeserters);
+				LoggingUtils.log(EconomyStatusBean.class, "maintainArmy", "soldiers deserted: " + numberOfDeserters);
+			}
+		}
 	}
 
 	private void consumeFood(){
 
-		int numberOfPeople = this.foodWorkers + this.woodWorkers + this.stoneWorkers + this.builders + this.soldiers;
-		this.foodIncome = (FOOD_MULTIPLICATOR * this.foodWorkers) - (numberOfPeople * FOOD_CONSUMPTION);
+		this.foodIncome = (Constants.FOOD_MULTIPLICATOR * this.foodWorkers) - this.getFoodConsumtion();
 		this.foodStorage += this.foodIncome;
+		if(this.foodStorage < 0){
+			this.foodStorage = 0;
+		}
+
+		LoggingUtils.log("EconomyStatusBean.consumeFood", "Food Income: " + this.foodIncome + " Food Storage:" + this.foodStorage + " Food consumption: " + this.getFoodConsumtion());
 
 		if(this.foodStorage <= 0){
 			this.turnsWithoutFood++;
-			if(this.turnsWithoutFood >= FOOD_SHORTAGE_TOLERANCE){
-				int peoplePerished = (int) Math.floor(this.foodStorage / FOOD_CONSUMPTION) * -1;
-				Log.v("consumeFood", "peoplePerished: " + peoplePerished);
+			if(this.turnsWithoutFood > Constants.FOOD_SHORTAGE_TOLERANCE){
+				int peoplePerished = 0;
+
+				if(this.getTotalPopulation() <= 10){
+					this.isCivilizationDead = true;
+				} else {
+					peoplePerished =(int) (this.getTotalPopulation() * Constants.FAMINE_PERISH);
+				}
+
+				LoggingUtils.log("EconomyStatusBean.consumeFood", "peoplePerished: " + peoplePerished);
 				while(peoplePerished > 0){
 					int choice = peoplePerished % NUMBER_OF_WORKER_TYPES;
 					switch(choice){
@@ -219,7 +257,7 @@ public class EconomyStatusBean {
 					case 1:
 						this.foodWorkers--;
 						if(this.foodWorkers < 0){
-							this.foodWorkers = 1;
+							this.foodWorkers = 0;
 						}
 						break;
 					case 2:
@@ -253,8 +291,12 @@ public class EconomyStatusBean {
 	}
 
 	private void calculateResourceIncome(){
-		this.woodIncome = WOOD_MULTIPLICATOR * this.woodWorkers;
-		this.stoneIncome = STONE_MULTIPLICATOR * this.stoneWorkers;
+		this.woodIncome = Constants.WOOD_MULTIPLICATOR * this.woodWorkers;
+		this.stoneIncome = Constants.STONE_MULTIPLICATOR * this.stoneWorkers;
+
+		LoggingUtils.log("EconomyStatusBean.calculateResourceIncome", "Wood Income: " + this.woodIncome + " Stone Income: " + this.stoneIncome);
+
+		//LoggingUtils.log("EconomyStatusBean.calculateResourceIncome", "Wood Income: " + this.woodIncome + " Stone Income: " + this.stoneIncome);
 	}
 
 	public float getFoodStorage() {
@@ -280,5 +322,21 @@ public class EconomyStatusBean {
 				this.coins -= resource.getPrice();
 			}
 		}
+	}
+
+	public void restartEconomyStatus(){
+		this.woodWorkers = 0;
+		this.foodWorkers = 1;
+		this.stoneWorkers = 0;
+		this.soldiers = 0;
+		this.coins = 0;
+		this.builders = 0;
+		this.foodStorage = Constants.STARTING_FOOD_AMOUNT;
+		this.turnsWithoutFood = 0;
+		this.isCivilizationDead = false;
+	}
+
+	public boolean isCivilizationDead() {
+		return this.isCivilizationDead;
 	}
 }

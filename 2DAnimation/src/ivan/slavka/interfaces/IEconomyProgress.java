@@ -17,6 +17,10 @@ public interface IEconomyProgress extends IWonderConstruction{
 	public float getCoins();
 	public void increaseNumberOfSoldiers(int numberOfSoldiers);
 	public int getLevel();
+	public int getTotalPopulation();
+	public float getFoodConsumption();
 
 	public void processEvent(IEvent event, InputControlEnum input);
+	public void restartGame();
+	public boolean isGameOver();
 }
